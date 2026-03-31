@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+    --color-dark: #182030;
+    --color-dark-light: #1c2634;
+    --color-dark-light-100: #232d3d;
+    --color-main: #f66da5;
+    --color-main-2: #ffa0a1;
+    --color-txt-1: #62738d;
+    --color-txt-2: #c9d4e2;
+}
+
+
+* {
+    font-family: "Google Sans", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+strong {
+    @apply font-bold;
+}
