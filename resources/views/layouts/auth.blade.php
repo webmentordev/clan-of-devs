@@ -7,7 +7,7 @@
         <title>{{ config('app.name') }}</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body>
+    <body class="bg-dark">
         @yield('content')
     </body>
 </html>

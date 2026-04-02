@@ -10,15 +10,7 @@
         @livewireStyles
     </head>
     <body>
-        <section class="h-screen bg-dark-light flex">
-            @livewire('components.workspace-nav')
-            @livewire('components.workspace-channels')
-            <div class="w-full h-screen overflow-hidden">
-                {{ $slot }}
-            </div>
-            @livewire('components.workspace-channel-info')
-        </section>
-
+        {{ $slot }}
         @livewireScripts
     </body>
 </html>

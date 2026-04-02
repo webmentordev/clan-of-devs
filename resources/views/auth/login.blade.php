@@ -1,8 +1,109 @@
 @extends('layouts.auth')
 @section('content')
-    <div class="h-screen w-full flex items-center justify-center">
-        <div class="px-6 sm:px-0 max-w-sm">
-            <button type="button" class="text-white w-full  bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-between mr-2 mb-2"><svg class="mr-2 -ml-1 w-4 h-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"></path></svg>Logins with Google<div></div></button>
+    <div class="min-h-screen w-full flex items-center justify-center">
+        <div class="w-full max-w-sm px-6 sm:px-0">
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <div class="mb-8 text-center">
+                    <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Welcome back</h1>
+                    <p class="text-sm text-gray-500 mt-1">Sign in to your account</p>
+                </div>
+                @if (session('error'))
+                    <div class="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                @if ($errors->any())
+                    <div class="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm">
+                        <ul class="list-disc list-inside space-y-1">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                <form action="{{ route('login') }}" method="POST" class="space-y-5">
+                    @csrf
+                    @session('success')
+                        <x-alert-success>{{ $value }}</x-alert-success>
+                    @endsession
+                    @session('failed')
+                        <x-alert-failed>{{ $value }}</x-alert-failed>
+                    @endsession
+                    <div>
+                        <x-label for="email">Email address</x-label>
+                        <x-input id="email" type="email" name="email" value="{{ old('email') }}" required placeholder="you@example.com"/>
+                        @error('email')
+                            <x-error>{{ $message }}</x-error>
+                        @enderror
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <x-label for="password">Password</x-label>
+                            @if (Route::has('password.request'))
+                                <a href="{{ route('password.request') }}"
+                                   class="text-xs text-blue-600 hover:text-blue-500 hover:underline">
+                                    Forgot password?
+                                </a>
+                            @endif
+                        </div>
+                        <x-input id="password" type="password" name="password" required placeholder="••••••••" />
+                        @error('password')
+                            <x-error>{{ $message }}</x-error>
+                        @enderror
+                    </div>
+                    <div class="flex items-center">
+                        <input
+                            id="remember"
+                            type="checkbox"
+                            name="remember"
+                            class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        />
+                        <label for="remember" class="ml-2 text-sm text-gray-600">
+                            Remember me
+                        </label>
+                    </div>
+                    <button
+                        type="submit"
+                        class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800
+                               text-white text-sm font-semibold rounded-lg
+                               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                               transition duration-150">
+                        Sign in
+                    </button>
+                </form>
+                <div class="relative my-6">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-200"></div>
+                    </div>
+                    <div class="relative flex justify-center text-xs text-gray-400">
+                        <span class="bg-white px-3">or continue with</span>
+                    </div>
+                </div>
+                <form action="{{ route('google.redirect') }}" method="POST">
+                    @csrf
+                    <button
+                        type="submit"
+                        class="w-full inline-flex items-center justify-center gap-3 px-5 py-2.5
+                               bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700
+                               hover:bg-gray-50 active:bg-gray-100
+                               focus:outline-none focus:ring-2 focus:ring-gray-300
+                               transition duration-150 shadow-sm">
+                        <svg class="w-4 h-4 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
+                            <path fill="#4285F4" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"/>
+                        </svg>
+                        Sign in with Google
+                    </button>
+                </form>
+                @if (Route::has('register'))
+                    <p class="mt-6 text-center text-sm text-gray-500">
+                        Don't have an account?
+                        <a href="{{ route('register') }}" class="text-blue-600 font-medium hover:underline">
+                            Create one
+                        </a>
+                    </p>
+                @endif
+            </div>
         </div>
     </div>
 @endsection
