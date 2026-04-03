@@ -9,7 +9,7 @@
             <div class="h-full">
                 <div class="w-full border-b border-dark-light-100 pb-3">
                     <div class="flex items-center mb-3">
-                        <h1 class="text-2xl text-white"># general</h1>
+                        <h1 class="text-2xl text-white flex items-center"><img src="https://api.iconify.design/clarity:hashtag-solid.svg?color=%23e3e3e3" width="22px"> general</h1>
                         <div class="relative group">
                             <img src="https://api.iconify.design/iconamoon:lock-bold.svg?color=%2315ef57" width="22px" class="ml-2">
                             <span class="hidden group-hover:block transition-all absolute left-8 top-0 bg-black/80 backdrop-blur-lg py-2 px-3 rounded-lg text-white text-sm whitespace-nowrap">Private Channel</span>

@@ -68,7 +68,7 @@
 
                     <div>
                         <x-label for="password_confirmation">Confirm password</x-label>
-                        <x-input id="password_confirmation"type="password" name="password_confirmation" required placeholder="••••••••" />
+                        <x-input id="password_confirmation" type="password" name="password_confirmation" required placeholder="••••••••" />
                         @error('password_confirmation')
                             <x-error>{{ $message }}</x-error>
                         @enderror
