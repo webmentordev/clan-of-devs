@@ -31,3 +31,11 @@ h4,
 strong {
     @apply font-bold;
 }
+
+button {
+    @apply cursor-pointer;
+}
+
+[x-cloak] {
+    display: none !important;
+}

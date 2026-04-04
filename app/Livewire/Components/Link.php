@@ -6,7 +6,7 @@ use Livewire\Component;
 
 class Link extends Component
 {
-    public $id, $name, $route;
+    public $id, $name, $route, $logo;
     
     public function render()
     {

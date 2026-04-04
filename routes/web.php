@@ -6,10 +6,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::livewire('/', "home")->name('home');
 
-// Workspace Routes (post authentication)
-Route::livewire('/workspaces/{workspace}', "auth.workspaces")->name("workspaces");
-Route::livewire('/workspaces/{workspace}/channel/{channel}', "auth.text-channel")->name("text.channel");
-
 Route::middleware(['guest'])->group(function(){
     // Authentication routes
     Route::get('/login', [AuthController::class, 'index'])->name('login');
@@ -31,6 +27,10 @@ Route::middleware(['guest'])->group(function(){
 
 
 Route::middleware(['auth'])->group(function(){
+    // Workspace Routes (post authentication)
+    Route::livewire('/workspaces/{workspace}', "auth.workspaces")->name("workspaces");
+    Route::livewire('/workspaces/{workspace}/channel/{channel}', "auth.text-channel")->name("text.channel");
+
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });

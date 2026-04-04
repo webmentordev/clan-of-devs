@@ -11,10 +11,11 @@ return new class extends Migration
         Schema::create('channels', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('slug');
             $table->enum('type', ['text', 'voice']);
             $table->boolean('is_private')->default(false);
             $table->boolean('is_deletable')->default(true);
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->string('unique_id');
             $table->foreignId('user_id')->comment('User who created the channel')->constrained()->cascadeOnDelete();
             $table->foreignId('workspace_id')->constrained()->cascadeOnDelete();

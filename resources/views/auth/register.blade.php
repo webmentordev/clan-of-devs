@@ -10,22 +10,6 @@
                     <p class="text-sm text-gray-500 mt-1">Sign up to get started</p>
                 </div>
 
-                @if (session('error'))
-                    <div class="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm">
-                        {{ session('error') }}
-                    </div>
-                @endif
-
-                @if ($errors->any())
-                    <div class="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm">
-                        <ul class="list-disc list-inside space-y-1">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
                 <form action="{{ route('register') }}" method="POST" class="space-y-5">
                     @csrf
                     @session('success')

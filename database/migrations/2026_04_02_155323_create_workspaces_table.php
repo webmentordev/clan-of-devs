@@ -10,11 +10,11 @@ return new class extends Migration
     {
         Schema::create('workspaces', function (Blueprint $table) {
             $table->id();
-            $table->string('unique_id');
             $table->string('title');
-            $table->string('slug');
-            $table->string('avatar');
-            $table->boolean('is_active');
+            $table->string('unique_id');
+            $table->text('description');
+            $table->string('logo');
+            $table->boolean('is_active')->default(true);
             $table->boolean('is_deleted')->default(false);
             $table->foreignId('user_id')->comment("Owner ID of the workspace")->constrained()->cascadeOnDelete();
             $table->timestamps();
