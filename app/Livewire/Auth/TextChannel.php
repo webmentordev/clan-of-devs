@@ -8,12 +8,12 @@ use Livewire\Component;
 
 class TextChannel extends Component
 {
-    public $workspace_id, $channel_id;
+    public $workspace, $channel;
     
-    // public function mount(Workspace $workspace, Channel $channel){
-    //     $this->workspace_id = $workspace;
-    //     $this->channel_id = $channel;
-    // }
+    public function mount(Workspace $workspace, Channel $channel){
+        $this->workspace = $workspace->load('channels');
+        $this->channel = $channel;
+    }
 
     public function render()
     {

@@ -3,7 +3,7 @@
     {{-- Workspace navigation --}}
     @livewire('components.workspace-nav')
     {{-- Workspace channels --}}
-    @livewire('components.workspace-channels')
+    @livewire('components.workspace-channels', ['channels' => $workspace->channels, 'workspace_uid' => $workspace->unique_id, 'channel_uid' => $channel->unique_id])
     {{-- Main workspace channels e.t.c --}}
         <section class="w-full h-full p-2 flex flex-col justify-between">
             <div class="h-full">

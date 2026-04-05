@@ -43,6 +43,18 @@
                                 <x-error>{{ $message }}</x-error>
                             @enderror
                         </div>
+                        <div class="mb-3 w-full">
+                            <x-label for="category">Workspace category</x-label>
+                            <x-select id="category" wire:model="category" required>
+                                <option value="" select>Select a category</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->slug }}">{{ $category->title }}</option>
+                                @endforeach
+                            </x-select>
+                            @error('category')
+                                <x-error>{{ $message }}</x-error>
+                            @enderror
+                        </div>
                         <button
                             type="submit"
                             class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800

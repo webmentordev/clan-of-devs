@@ -1,0 +1,23 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::table('workspaces', function (Blueprint $table) {
+            $table->foreignId('workspace_category_id')->after('logo')->comment("Category of the workspace")->constrained()->cascadeOnDelete();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('workspaces', function (Blueprint $table) {
+            $table->dropForeign(['workspace_category_id']);
+            $table->dropColumn(['workspace_category_id']);
+        });
+    }
+};
