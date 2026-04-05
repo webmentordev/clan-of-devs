@@ -3,6 +3,8 @@
 namespace App\Livewire\Components;
 
 use App\Models\Channel;
+use App\Models\ChannelMember;
+use App\Models\Member;
 use App\Models\Workspace;
 use App\Models\WorkspaceCategory;
 use Illuminate\Support\Facades\Auth;
@@ -74,7 +76,7 @@ class CreateWorkspace extends Component
         ]);
         foreach ($this->default_channels as $type => $channels) {
             foreach ($channels as $channel) {
-                Channel::create([
+                $channel = Channel::create([
                     'title'        => $channel['title'],
                     'type'         => $type,
                     'slug'         => Str::slug($channel['title']),
@@ -84,8 +86,18 @@ class CreateWorkspace extends Component
                     'user_id'      => Auth::user()->id,
                     'description'  => $channel['description'],
                 ]);
+                ChannelMember::create([
+                    'user_id' => Auth::user()->id,
+                    'workspace_id' => $workspace->id,
+                    'channel_id' => $channel->id,
+                ]);
             }
         }
+        Member::create([
+            'user_id' => Auth::user()->id,
+            'workspace_id' => $workspace->id,
+            'role' => 'owner',
+        ]);
         $this->reset(['title', 'description']);
         $this->dispatch('workspace-created'); 
         session()->flash('success', 'Workspace has been created!');

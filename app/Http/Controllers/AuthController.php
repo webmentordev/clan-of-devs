@@ -21,7 +21,7 @@ class AuthController extends Controller
         ]);
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->route('home');
+            return redirect()->route('workspaces');
         }
         return back()->with('failed', "The provided credentials do not match our records.");
     }
@@ -84,7 +84,7 @@ class AuthController extends Controller
         }
         event(new Registered($user));
         Auth::login($user);
-        return redirect()->route('home');
+        return redirect()->route('workspaces');
     }
 
     private function randomPassword()

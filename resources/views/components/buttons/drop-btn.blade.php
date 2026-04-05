@@ -1,0 +1,2 @@
+@props(['first' => false])
+<button {{ $attributes->merge(['class' => 'p-2 w-full inline-block text-sm text-txt-2 hover:text-txt-1 text-start border-dark-light-100 ' . (!$first ? 'border-b' : '')]) }}>{{ $slot }}</button>

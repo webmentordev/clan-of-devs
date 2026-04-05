@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Models\Channel;
+use App\Models\ChannelMember;
+use App\Models\Member;
 use App\Models\User;
 use App\Models\WorkspaceCategory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -29,5 +31,15 @@ class Workspace extends Model
     public function category()
     {
         return $this->belongsTo(WorkspaceCategory::class);
+    }
+
+    public function members()
+    {
+        return $this->hasMany(Member::class);
+    }
+
+    public function channel_members()
+    {
+        return $this->hasMany(ChannelMember::class);
     }
 }
