@@ -14,6 +14,7 @@
     --color-dark-100: #121927;
     --color-dark-light: #1c2634;
     --color-dark-light-100: #232d3d;
+    --color-light: #2f3a4d;
     --color-main: #f66da5;
     --color-main-2: #ffa0a1;
     --color-txt-1: #62738d;
@@ -39,4 +40,20 @@ button {
 
 [x-cloak] {
     display: none !important;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-dark-light;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-dark-100;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    @apply bg-dark;
 }
