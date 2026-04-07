@@ -7,8 +7,8 @@
     {{-- Main workspace channels e.t.c --}}
     <section class="w-full h-full p-2">
         @forelse ($workspaces as $workspace)
-            <div class="grid grid-cols-6 gap-3">
-                <div class="flex flex-col w-full h-fit bg-dark-light-100 rounded-xl overflow-hidden border border-white/5">
+            <div class="grid @if ($workspace_data) grid-cols-6  @else grid-cols-7 @endif gap-3">
+                <div wire:click='assign_data("{{ $workspace->unique_id }}")' class="flex flex-col w-full h-fit bg-dark-light-100 rounded-xl overflow-hidden border border-white/5 cursor-pointer">
                     <div class="flex items-center justify-center bg-dark-100 h-32 p-4">
                         <img src="{{ config('app.url') . '/storage/' . $workspace->logo }}" class="w-16 h-16 object-contain rounded-xl" alt="{{ $workspace->title }}">
                     </div>
@@ -35,8 +35,8 @@
             </div>
         @endforelse
     </section>
-    @if ($active)
+    @if ($workspace_data)
         {{-- Workspace information --}}
-        @livewire('components.workspace-info', ['id' => $active])
+        @livewire('components.workspace-info', ['data' => $workspace_data])
     @endif
 </section>

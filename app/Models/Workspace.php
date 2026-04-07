@@ -23,6 +23,11 @@ class Workspace extends Model
         return $this->hasMany(Channel::class);
     }
 
+    public function public_channels()
+    {
+        return $this->hasMany(Channel::class)->where('is_private', false);
+    }
+
     public function general_chat()
     {
         return $this->hasOne(Channel::class)->where('title', 'general');
@@ -30,12 +35,17 @@ class Workspace extends Model
 
     public function category()
     {
-        return $this->belongsTo(WorkspaceCategory::class);
+        return $this->belongsTo(WorkspaceCategory::class, 'workspace_category_id', 'id');
     }
 
     public function members()
     {
         return $this->hasMany(Member::class);
+    }
+
+    public function first_members()
+    {
+        return $this->hasMany(Member::class)->limit(6);
     }
 
     public function channel_members()
