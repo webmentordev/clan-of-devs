@@ -23,7 +23,7 @@
                             <span class="text-txt-2 text-xs">{{ $members }} {{ Str::plural('member', $members) }}</span>
                         </div>
                         {{-- Maybe this feature wil not be added --}}
-                        <button class="w-full bg-main hover:bg-main/80 text-white text-sm font-semibold py-2.5 rounded-lg transition-opacity duration-150">
+                        <button wire:click='join_workspace("{{ $workspace->unique_id }}")' class="w-full bg-main hover:bg-main/80 text-white text-sm font-semibold py-2.5 rounded-lg transition-opacity duration-150">
                             Join workspace
                         </button>
                     </div>

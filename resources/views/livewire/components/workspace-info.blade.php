@@ -20,7 +20,7 @@
             </div>
             <h1 class="text-xl text-txt-2 font-semibold my-3">Members</h1>
             @foreach ($data->first_members as $member)
-                <div class="flex items-center">
+                <div class="flex items-center mb-3">
                     <div class="w-8 h-8 bg-cover bg-center rounded-full" style="background-image: url('{{ $member->user->get_avatar() }}')"></div>
                     <p class="ml-2 text-white text-sm">{{ $member->user->name }}</p>
                 </div>

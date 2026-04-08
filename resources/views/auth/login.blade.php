@@ -7,21 +7,6 @@
                     <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Welcome back</h1>
                     <p class="text-sm text-gray-500 mt-1">Sign in to your account</p>
                 </div>
-                @if (session('error'))
-                    <div class="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm">
-                        {{ session('error') }}
-                    </div>
-                @endif
-
-                @if ($errors->any())
-                    <div class="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm">
-                        <ul class="list-disc list-inside space-y-1">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
                 <form action="{{ route('login') }}" method="POST" class="space-y-5">
                     @csrf
                     @session('success')
@@ -56,7 +41,7 @@
                         <input
                             id="remember"
                             type="checkbox"
-                            name="remember"
+                            name="remember_me"
                             class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                         />
                         <label for="remember" class="ml-2 text-sm text-gray-600">

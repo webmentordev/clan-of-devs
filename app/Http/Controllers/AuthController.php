@@ -19,7 +19,7 @@ class AuthController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, $request->remember_me)) {
             $request->session()->regenerate();
             return redirect()->route('workspaces');
         }

@@ -2,8 +2,10 @@
 
 namespace App\Livewire\Auth;
 
+use App\Models\Member;
 use App\Models\Workspace;
 use App\Models\WorkspaceCategory;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class Workspaces extends Component
@@ -31,5 +33,19 @@ class Workspaces extends Component
             return;
         }
         abort(404);
+    }
+
+    public function join_workspace($unique_id){
+        $record = Workspace::where('unique_id', $unique_id)->first();
+        if($record){
+            $member = Member::where('user_id', Auth::user()->id)->where("workspace_id", $record->id)->first();
+            if(!$member){
+                Member::create([
+                    'user_id' => Auth::user()->id,
+                    'workspace_id' => $record->id,
+                    'role' => 'common'
+                ]);
+            }
+        }
     }
 }
