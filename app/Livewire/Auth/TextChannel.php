@@ -13,7 +13,7 @@ class TextChannel extends Component
     public function mount(Workspace $workspace, Channel $channel)
     {
         $this->workspace = $workspace->load('channels')->loadCount('members');
-        $this->channel = $channel->load(['workspace' => fn($query) => $query->withCount('members')])->loadCount('channel_members');
+        $this->channel = $channel->load(['workspace' => fn($query) => $query->withCount('members'), 'channel_members'])->loadCount('channel_members');
     }
 
     public function render()

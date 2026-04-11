@@ -7,8 +7,8 @@
     {{-- Main workspace channels e.t.c --}}
     <section class="w-full h-full p-2">
         @forelse ($workspaces as $workspace)
-            <div class="grid @if ($workspace_data) grid-cols-6  @else grid-cols-7 @endif gap-3">
-                <div wire:click='assign_data("{{ $workspace->unique_id }}")' class="flex flex-col w-full h-fit bg-dark-light-100 rounded-xl overflow-hidden border border-white/5 cursor-pointer">
+            <div class="flex flex-wrap">
+                <div wire:click='assign_data("{{ $workspace->unique_id }}")' class="flex flex-col w-full h-fit max-w-[200px] bg-dark-light-100 rounded-xl overflow-hidden border border-white/5 cursor-pointer">
                     <div class="flex items-center justify-center bg-dark-100 h-32 p-4">
                         <img src="{{ config('app.url') . '/storage/' . $workspace->logo }}" class="w-16 h-16 object-contain rounded-xl" alt="{{ $workspace->title }}">
                     </div>
@@ -22,7 +22,6 @@
                             @php $members = $workspace->members_count; @endphp
                             <span class="text-txt-2 text-xs">{{ $members }} {{ Str::plural('member', $members) }}</span>
                         </div>
-                        {{-- Maybe this feature wil not be added --}}
                         <button wire:click='join_workspace("{{ $workspace->unique_id }}")' class="w-full bg-main hover:bg-main/80 text-white text-sm font-semibold py-2.5 rounded-lg transition-opacity duration-150">
                             Join workspace
                         </button>

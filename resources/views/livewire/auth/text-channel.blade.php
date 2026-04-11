@@ -37,5 +37,5 @@
             </div>
         </section>
     {{-- Workspace channel information --}}
-    @livewire('components.workspace-channel-info')
+    @livewire('components.workspace-channel-info', ['channel' => $channel])
 </section>

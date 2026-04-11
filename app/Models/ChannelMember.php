@@ -13,16 +13,16 @@ class ChannelMember extends Model
 {
     public function user()
     {
-        $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function workspace()
     {
-        $this->belongsTo(Workspace::class);
+        return $this->belongsTo(Workspace::class);
     }
 
     public function channel()
     {
-        $this->belongsTo(Channel::class);
+        return $this->belongsTo(Channel::class);
     }
 }
