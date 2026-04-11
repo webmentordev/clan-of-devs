@@ -42,6 +42,7 @@ class WorkspaceCategorySeeder extends Seeder
             'Retail',
             'Logistics & Supply Chain',
             'Cybersecurity',
+            'Other'
         ];
 
         foreach ($categories as $category) {

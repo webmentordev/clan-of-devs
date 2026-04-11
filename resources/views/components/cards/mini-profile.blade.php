@@ -1,4 +1,4 @@
-@props(['avatar', 'name', 'is_creator'])
+@props(['avatar', 'name', 'is_creator' => false])
 <div class="flex items-center mb-3">
     <div class="w-8 h-8 bg-cover bg-center rounded-full" style="background-image: url('{{ $avatar }}')"></div>
     <p class="ml-2 text-white text-sm">{{ Str::limit($name, 20, '...') }} </p>

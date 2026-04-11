@@ -1,13 +1,16 @@
 <?php
 
 namespace App\Livewire\Components;
-
-use App\Models\Workspace;
 use Livewire\Component;
 
 class WorkspaceInfo extends Component
 {
-    public $data = null;
+    public $data;
+
+    public function mount($data): void
+    {
+        $this->data = $data;
+    }
 
     public function render()
     {

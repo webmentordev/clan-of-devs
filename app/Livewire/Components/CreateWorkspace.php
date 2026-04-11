@@ -59,7 +59,7 @@ class CreateWorkspace extends Component
             'title' => ['required', 'max:255'],
             'logo' => ['required', 'image', 'max:2024'],
             'category' => ['required'],
-            'description' => ['required']
+            'description' => ['required', 'min:60']
         ]);
         $record = WorkspaceCategory::where('slug', $this->category)->first();
         if(!$record){

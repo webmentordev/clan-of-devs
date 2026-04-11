@@ -10,7 +10,7 @@ class WorkspaceCategories extends Component
     public function render()
     {
         return view('livewire.components.workspace-categories', [
-            'categories' => WorkspaceCategory::orderBy('title')->get()
+            'categories' => WorkspaceCategory::orderBy('title')->withCount(['workspaces'])->get()
         ]);
     }
 }
