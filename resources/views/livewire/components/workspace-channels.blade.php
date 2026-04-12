@@ -1,5 +1,6 @@
 <nav class="flex flex-col p-3 h-full border-x border-dark-light-100 w-80">
     <div class="" x-data="{ text_open: true, voice_open: true }">
+        {{-- Text channels --}}
         <button class="w-full flex items-center mb-2" @click="text_open = !text-open">
             <img src="https://api.iconify.design/cuida:caret-down-outline.svg?color=%23888888" width="20px">
             <span class="ml-2 text-white font-semibold text-sm">Text channels</span>
@@ -20,6 +21,7 @@
             @endforeach
         </div>
 
+        {{-- Voice channels --}}
         <button class="w-full flex items-center mb-2 mt-8" @click="voice_open = !text-open">
             <img src="https://api.iconify.design/cuida:caret-down-outline.svg?color=%23888888" width="20px">
             <span class="ml-2 text-white font-semibold text-sm">Voice channels</span>
@@ -29,6 +31,17 @@
                 @if($channel->type == 'voice')
                     <button class="flex items-center text-sm text-txt-2 font-semibold mb-1 py-1 px-2 w-full"><img src="https://api.iconify.design/mdi:volume-high.svg?color=%23e3e3e3" width="16"> <strong class="ml-2">{{ $channel->title }}</strong></button>
                 @endif
+            @endforeach
+        </div>
+
+        {{-- Members --}}
+        <button class="w-full flex items-center mb-2 mt-8">
+            <img src="https://api.iconify.design/ph:users-three-duotone.svg?color=%23888888" width="20px">
+            <span class="ml-2 text-white font-semibold text-sm">Members</span>
+        </button>
+        <div class="flex flex-col">
+            @foreach ($members as $member)
+                <x-cards.mini-profile :name="$member->user->name" limit="10" :avatar="$member->user->get_avatar()" :you="$member->user_id == auth()->user()->id" />
             @endforeach
         </div>
     </div>

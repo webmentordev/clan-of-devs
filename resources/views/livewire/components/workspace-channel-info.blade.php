@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 @foreach ($channel->channel_members as $member)
-                    <x-cards.mini-profile :name="$member->user->name" :avatar="$member->user->get_avatar()" :is_creator="$member->user->id == $channel->user_id"/>
+                    <x-cards.mini-profile :name="$member->user->name" :avatar="$member->user->get_avatar()" :is_creator="$member->user->id == $channel->user_id" :you="$member->user->id == auth()->user()->id"/>
                 @endforeach
                 @if ($channel->channel_members_count > 10) <p class="text-main text-sm"> and more ...</p> @endif
             @endif
