@@ -28,6 +28,7 @@ Route::middleware(['guest'])->group(function(){
 
 Route::middleware(['auth'])->group(function(){
     // Workspace Routes (post authentication)
+    Route::livewire('/profile', 'auth.profile')->name('profile');
     Route::livewire('/workspaces/{workspace_category:slug?}', 'auth.workspaces')->name('workspaces');
     Route::livewire('/workspaces/{workspace:unique_id}/channel/{channel:unique_id}', "auth.text-channel")->name("text.channel");
 

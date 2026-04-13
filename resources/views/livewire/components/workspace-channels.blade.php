@@ -1,4 +1,4 @@
-<nav class="flex flex-col p-3 h-full border-x border-dark-light-100 w-80">
+<nav class="flex flex-col p-3 h-full border-x border-dark-light-100 w-80 relative">
     <div class="" x-data="{ text_open: true, voice_open: true }">
         {{-- Text channels --}}
         <button class="w-full flex items-center mb-2" @click="text_open = !text-open">
@@ -43,6 +43,23 @@
             @foreach ($members as $member)
                 <x-cards.mini-profile :name="$member->user->name" limit="10" :avatar="$member->user->get_avatar()" :you="$member->user_id == auth()->user()->id" />
             @endforeach
+        </div>
+    </div>
+    <div class="absolute bottom-0 p-2 left-0 w-full">
+        <div class="bg-dark-100/90 backdrop-blur-md border border-white/10 rounded-lg p-2 flex justify-between items-center">
+            <div class="w-fit flex items-center">
+                <div class="relative w-fit">
+                    <div class="w-8 h-8 bg-cover bg-center rounded-full" style="background-image: url('{{ auth()->user()->get_avatar() }}')"></div>
+                    <div class="absolute w-2.5 h-2.5 bg-green-500 rounded-full bottom-0 right-0 border border-black"></div>
+                </div>
+                <div class="ml-2 flex flex-col">
+                    <h2 class="text-txt-2 text-[12px]">{{ Str::limit(auth()->user()->name, 12, '...') }}</h2>
+                    <span class="text-txt-1 text-[10px]" title="{{ auth()->user()->username }}">{{ '@'.Str::limit(auth()->user()->username, 12, '...') }}</span>
+                </div>
+            </div>
+            <a href="{{ route('profile') }}">
+                <img src="https://api.iconify.design/material-symbols:settings.svg?color=%23bdbdbd" width="18px">
+            </a>
         </div>
     </div>
 </nav>

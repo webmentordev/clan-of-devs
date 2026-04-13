@@ -1,4 +1,4 @@
-<nav class="flex flex-col p-3 h-full border-x border-dark-light-100 w-85 overflow-y-scroll">
+<nav class="flex flex-col p-3 h-full border-x border-dark-light-100 w-85 overflow-y-scroll relative">
     <div class="w-full flex items-center mb-2">
         <img src="https://api.iconify.design/cuida:caret-down-outline.svg?color=%23888888" width="20px">
         <span class="ml-2 text-white font-semibold text-sm">Workspace categories</span>
