@@ -1,12 +1,12 @@
 <div class="flex mb-2 p-2 group hover:bg-dark-100 transition-all rounded-md" x-data="{ open: false, shiftHeld: false }"  
     @keydown.shift.window="shiftHeld = true" 
     @keyup.shift.window="shiftHeld = false">
-    <img src="{{ asset('assets/avatar.png') }}" width="40px" height="40px" class="object-fill rounded-full w-10 h-10">
+    <img src="{{ $message->user->get_avatar() }}" width="40px" height="40px" class="object-fill rounded-full w-10 h-10">
     <div class="flex flex-col ml-3 w-full">
         <div class="flex justify-between w-full">
             <div class="flex items-center">
-                <h3 class="text-white text-lg">Jon Williumson Starmer</h3>
-                <span class="ml-3 text-txt-1 text-sm">10:38 AM</span>
+                <h3 class="text-white text-lg">{{ $message->user->name }}</h3>
+                <span class="ml-3 text-txt-1 text-sm">{{ $message->created_at->format('d M, y h:i A') }}</span>
             </div>
             <div class="relative hidden group-hover:block">
                 <button class="py-0.5 px-2 rounded-md bg-dark-100 border border-dark-light-100" @click="open = true">
@@ -20,6 +20,6 @@
                 </div>
             </div>
         </div>
-        <p class="text-txt-2 text-sm">Google Messages is the official Google app for messaging. Google Messages is revolutionizing how a billion users connect and is powered by Rich</p>
+        <p class="text-txt-2 text-sm">{{ $message->message }}</p>
     </div>
 </div>

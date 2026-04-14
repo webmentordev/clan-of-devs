@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\ChannelMember;
+use App\Models\Message;
 use App\Models\User;
 use App\Models\Workspace;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -31,5 +32,10 @@ class Channel extends Model
     {
         $count = $this->is_private ? $this->channel_members()->count() : $this->workspace->members()->count();
         return $count . ' ' . Str::plural('member', $count);
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
     }
 }

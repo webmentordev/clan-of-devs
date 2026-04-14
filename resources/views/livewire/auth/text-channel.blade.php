@@ -24,17 +24,20 @@
                         </p>
                     </div>
                 </div>
-                <div class="mt-4">
-                    @livewire('components.chat-message')
-                    @livewire('components.chat-message')
-                    @livewire('components.chat-message')
-                    @livewire('components.chat-message')
-                    @livewire('components.chat-message')
+                <div class="mt-4 max-h-178 overflow-y-scroll">
+                    @forelse ($messages as $single_message)
+                        @livewire('components.chat-message', ['message' => $single_message])
+                    @empty
+                        <p class="text-txt-2 p-2">Channel is empty</p>
+                    @endforelse
                 </div>
             </div>
-            <div class="bg-dark rounded-lg p-4">
-
-            </div>
+            <div class="w-full">
+                <x-texteditor  placeholder="Message in #{{ $channel->title }}..."
+                    wire:model="message"
+                    x-on:keydown.enter="if (!$event.shiftKey) { $event.preventDefault(); $wire.send_message() }">
+                </x-texteditor>
+            </div>  
         </section>
     {{-- Workspace channel information --}}
     @livewire('components.workspace-channel-info', ['channel' => $channel])
