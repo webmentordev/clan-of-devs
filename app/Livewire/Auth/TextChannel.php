@@ -21,8 +21,10 @@ class TextChannel extends Component
     
     public function mount(Workspace $workspace, Channel $channel)
     {
-        $this->workspace = $workspace->load('channels')->loadCount('members');
-        $this->channel = $channel->load(['workspace' => fn($query) => $query->withCount('members'), 'channel_members'])->loadCount('channel_members');
+        $this->authorize('view', [$channel, $workspace]);
+        
+        $this->workspace = $workspace->load(['channels',])->loadCount('members');
+        $this->channel = $channel->load(['channel_members'])->loadCount('channel_members');
         $this->fill([
             'messages' => Message::where('channel_id', $this->channel->id)->take(20)->get()
         ]);

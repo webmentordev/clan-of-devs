@@ -30,6 +30,7 @@
                     @empty
                         <p class="text-txt-2 p-2">Channel is empty</p>
                     @endforelse
+                    <div class="sm:[overflow-anchor:auto] h-px" x-init="$el.scrollIntoView()"></div>
                 </div>
             </div>
             <div class="w-full">

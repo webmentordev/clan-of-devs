@@ -8,15 +8,17 @@
         <div class="flex flex-col">
             @foreach ($channels as $channel)
                 @if($channel->type == 'text')
-                    <a href="{{ route('text.channel', [$workspace_uid, $channel->unique_id]) }}" wire:navigate class="flex items-center text-sm text-txt-2 font-semibold mb-1 
-                    @if ($channel_uid == $channel->unique_id)
-                        border-main bg-dark border-r-4
-                    @endif py-1 px-2 w-full"> 
-                    @if (!$channel->is_private)
-                        <img src="https://api.iconify.design/clarity:hashtag-solid.svg?color=%23e3e3e3" width="13"><strong class="ml-2">
-                    @else
-                        <img src="https://api.iconify.design/material-symbols-light:lock.svg?color=%23e3e3e3" width="17"><strong class="ml-2">
-                    @endif {{ $channel->title }}</strong></a>
+                    @if (!$channel->is_private || $channel->isMember(auth()->id()))
+                        <a href="{{ route('text.channel', [$workspace_uid, $channel->unique_id]) }}" wire:navigate class="flex items-center text-sm text-txt-2 font-semibold mb-1 
+                        @if ($channel_uid == $channel->unique_id)
+                            border-main bg-dark border-r-4
+                        @endif py-1 px-2 w-full"> 
+                        @if (!$channel->is_private)
+                            <img src="https://api.iconify.design/clarity:hashtag-solid.svg?color=%23e3e3e3" width="13"><strong class="ml-2">
+                        @else
+                            <img src="https://api.iconify.design/material-symbols-light:lock.svg?color=%23e3e3e3" width="17"><strong class="ml-2">
+                        @endif {{ $channel->title }}</strong></a>
+                    @endif
                 @endif
             @endforeach
         </div>

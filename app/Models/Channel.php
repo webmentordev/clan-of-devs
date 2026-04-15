@@ -38,4 +38,9 @@ class Channel extends Model
     {
         return $this->hasMany(Message::class);
     }
+
+    public function isMember($userId): bool
+    {
+        return $this->channel_members->contains('user_id', $userId);
+    }
 }
