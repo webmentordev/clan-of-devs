@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Components;
 
+use App\Models\Member;
 use App\Models\Workspace;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -13,7 +15,7 @@ class WorkspaceNav extends Component
     public function render()
     {
         return view('livewire.components.workspace-nav', [
-            'workspaces' => Workspace::orderBy('title')->with(['channels', 'general_chat'])->get()
+            'members' => Member::where('user_id', Auth::user()->id)->get()
         ]);
     }
 

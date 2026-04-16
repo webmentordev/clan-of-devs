@@ -37,10 +37,13 @@
         </div>
 
         {{-- Members --}}
-        <button class="w-full flex items-center mb-2 mt-8">
-            <img src="https://api.iconify.design/ph:users-three-duotone.svg?color=%23888888" width="20px">
-            <span class="ml-2 text-white font-semibold text-sm">Members</span>
-        </button>
+        <div class="flex items-center justify-between mt-8 mb-2">
+            <div class="w-full flex items-center">
+                <img src="https://api.iconify.design/ph:users-three-duotone.svg?color=%23888888" width="20px">
+                <span class="ml-2 text-white font-semibold text-sm">Members</span>
+            </div>
+            @livewire('components.add-member', ['workspace' => $workspace_uid])
+        </div>
         <div class="flex flex-col">
             @foreach ($members as $member)
                 <x-cards.mini-profile :name="$member->user->name" limit="10" :avatar="$member->user->get_avatar()" :you="$member->user_id == auth()->user()->id" />

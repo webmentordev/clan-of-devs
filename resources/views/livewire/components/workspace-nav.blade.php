@@ -4,9 +4,9 @@
         <span class="hidden group-hover:block transition-all absolute left-12 top-0 bg-black/80 backdrop-blur-lg py-2 px-3 rounded-lg text-white text-sm whitespace-nowrap">Workspaces</span>
     </a>
     <div class="border-t border-white/10 mt-1 mb-3 inline-block"></div>
-    @if (count($workspaces))
-        @foreach ($workspaces as $workspace)
-            @livewire('components.link', ['route' => 'text.channel', 'id' => $workspace->unique_id, 'name' => $workspace->title, 'channel' => $workspace->general_chat->unique_id, 'logo' => $workspace->logo])
+    @if (count($members))
+        @foreach ($members as $member)
+            @livewire('components.link', ['route' => 'text.channel', 'id' => $member->workspace->unique_id, 'name' => $member->workspace->title, 'channel' => $member->workspace->general_chat->unique_id, 'logo' => $member->workspace->logo])
         @endforeach
     @endif
     @livewire('components.create-workspace')
