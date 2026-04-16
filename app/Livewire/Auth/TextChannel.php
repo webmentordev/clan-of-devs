@@ -21,6 +21,7 @@ class TextChannel extends Component
     
     public function mount(Workspace $workspace, Channel $channel)
     {
+        $this->authorize('view_workspace', $workspace);
         $this->authorize('view', [$channel, $workspace]);
         
         $this->workspace = $workspace->load(['channels',])->loadCount('members');
