@@ -17,7 +17,7 @@ class CreateWorkspace extends Component
 {
     use WithFileUploads;
 
-    public $title, $logo, $description, $category;
+    public $title, $logo, $description, $category, $public = true;
     
     public $default_channels = [
         "text" => [
@@ -59,7 +59,8 @@ class CreateWorkspace extends Component
             'title' => ['required', 'max:255'],
             'logo' => ['required', 'image', 'max:2024'],
             'category' => ['required'],
-            'description' => ['required', 'min:60']
+            'description' => ['required', 'min:60'],
+            'public' => ['required', 'boolean']
         ]);
         $record = WorkspaceCategory::where('slug', $this->category)->first();
         if(!$record){
@@ -72,7 +73,8 @@ class CreateWorkspace extends Component
             'description' => $this->description,
             'workspace_category_id' => $record->id,
             'unique_id' => strtoupper(uniqid()).rand(999,999999),
-            'user_id' => Auth::user()->id
+            'user_id' => Auth::user()->id,
+            'is_public' => $this->public
         ]);
         foreach ($this->default_channels as $type => $channels) {
             foreach ($channels as $channel) {

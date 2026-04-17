@@ -1,5 +1,41 @@
 <nav class="flex flex-col p-3 h-full border-x border-dark-light-100 w-80 relative">
     <div class="" x-data="{ text_open: true, voice_open: true }">
+        <div class="flex items-center justify-between mb-4 text-main" x-data="{ setting: false }">
+            <div class="flex items-center">
+                <h2 class="mr-2">{{ Str::limit($workspace->title, 15, '...')}}</h2>
+                @if (!$workspace->is_public)
+                    <img src="https://api.iconify.design/iconamoon:lock-bold.svg?color=%2315ef57" width="20px">
+                @endif
+            </div>
+            <button @click="setting = true" class><img src="https://api.iconify.design/material-symbols:settings.svg?color=%23bdbdbd" width="20px"></button>
+            <div class="z-50 top-0 left-0 bg-dark/10 backdrop-blur-lg w-full h-full fixed" x-show="setting" x-cloak x-transition>
+                <div class="w-full h-full flex items-center justify-center" @click.self="setting = false">
+                    <div class="max-w-2xl w-full p-6 bg-dark border border-white/10 rounded-lg">
+                        <h3 class="text-white mb-3">Update worspace settings</h3>
+                        @session('success_setting')
+                            <x-alert-success>{{ $value }}</x-alert-success>
+                        @endsession
+                        @session('failed_setting')
+                            <x-alert-failed>{{ $value }}</x-alert-failed>
+                        @endsession
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-main">Workspace visibility</h3>
+                            <button wire:click="toggle_visibility" class="py-1 px-4 bg-main text-white rounded-lg">
+                                @if ($workspace->is_public)
+                                    Public
+                                @else
+                                    Private
+                                @endif
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div wire:loading wire:target="add">
+                    <x-alert-processing />
+                </div>
+            </div>
+        </div>
+        
         {{-- Text channels --}}
         <button class="w-full flex items-center mb-2" @click="text_open = !text-open">
             <img src="https://api.iconify.design/cuida:caret-down-outline.svg?color=%23888888" width="20px">

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('logo');
             $table->boolean('is_active')->default(true);
             $table->boolean('is_deleted')->default(false);
+            $table->boolean('is_public')->default(true);
             $table->foreignId('user_id')->comment("Owner ID of the workspace")->constrained()->cascadeOnDelete();
             $table->timestamps();
         });

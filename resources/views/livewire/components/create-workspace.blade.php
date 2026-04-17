@@ -1,7 +1,7 @@
 <section x-data="{ open: false }">
     <button @click="open = true" class="bg-white rounded-lg group relative p-2 w-10 h-10 flex items-center justify-center mb-3">
         <img src="https://api.iconify.design/material-symbols:add-rounded.svg?color=%23000000" width="30px">
-        <span class="hidden group-hover:block transition-all absolute left-12 top-0 bg-black/80 backdrop-blur-lg py-2 px-3 rounded-lg text-white text-sm whitespace-nowrap">Create a workspace</span>
+        <span class="hidden group-hover:block transition-all absolute left-12 top-0 bg-black/80 backdrop-blur-lg py-2 px-3 rounded-lg text-white text-sm whitespace-nowrap z-10">Create a workspace</span>
     </button>
     <div class="w-full h-full fixed top-0 left-0 bg-dark/90 backdrop-blur-md z-10" x-show="open"  x-cloak x-transition>
         <div class="flex items-center justify-center h-full w-full" @click.self="open = false">
@@ -52,6 +52,16 @@
                                 @endforeach
                             </x-select>
                             @error('category')
+                                <x-error>{{ $message }}</x-error>
+                            @enderror
+                        </div>
+                        <div class="mb-3 w-full">
+                            <x-label for="public">Public workspace?</x-label>
+                            <x-select id="public" wire:model="public" required>
+                                <option value="1">Yes, this will be public</option>
+                                <option value="0">No, workspace will be private</option>
+                            </x-select>
+                            @error('public')
                                 <x-error>{{ $message }}</x-error>
                             @enderror
                         </div>

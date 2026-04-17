@@ -10,7 +10,7 @@ use App\Models\WorkspaceCategory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['title', 'unique_id', 'workspace_category_id', 'description', 'logo', 'is_active', 'user_id', 'is_deleted'])]
+#[Fillable(['title', 'unique_id', 'workspace_category_id', 'description', 'logo', 'is_active', 'user_id', 'is_deleted', 'is_public'])]
 class Workspace extends Model
 {
     public function user()

@@ -11,6 +11,6 @@ class WorkspaceCategory extends Model
 {
     public function workspaces()
     {
-        return $this->hasMany(Workspace::class);
+        return $this->hasMany(Workspace::class)->where('is_public', true);
     }
 }

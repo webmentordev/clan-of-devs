@@ -23,12 +23,18 @@ class Workspaces extends Component
         $workspaces = $this->workspace_category_id
             ? WorkspaceCategory::find($this->workspace_category_id)
                 ->workspaces()
+                ->where('is_public', true)
                 ->withCount('members')
                 ->get()
-            : Workspace::latest()->withCount('members')->take(30)->get();
+            : Workspace::where('is_public', true)
+                ->latest()
+                ->withCount('members')
+                ->take(30)
+                ->get();
 
         $workspace_data = $this->selected_workspace_id
             ? Workspace::where('unique_id', $this->selected_workspace_id)
+                ->where('is_public', true)
                 ->with(['category', 'first_members'])
                 ->withCount(['members', 'channels', 'public_channels'])
                 ->first()
@@ -49,10 +55,12 @@ class Workspaces extends Component
     {
         $record = Workspace::where('unique_id', $unique_id)->first();
         if ($record) {
-            Member::firstOrCreate(
-                ['user_id' => Auth::id(), 'workspace_id' => $record->id,],
-                ['role' => 'common']
-            );
+            if($record->is_public){
+                Member::firstOrCreate(
+                    ['user_id' => Auth::id(), 'workspace_id' => $record->id,],
+                    ['role' => 'common']
+                );
+            }
         }
     }
 }

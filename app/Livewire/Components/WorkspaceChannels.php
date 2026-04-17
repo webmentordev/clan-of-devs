@@ -25,4 +25,10 @@ class WorkspaceChannels extends Component
     {
         return view('livewire.components.workspace-channels');
     }
+
+    public function toggle_visibility(){
+        $this->workspace->is_public = !$this->workspace->is_public;
+        $this->workspace->save();
+        session()->flash('success_setting', 'Workspace visibility has been changed!');
+    }
 }

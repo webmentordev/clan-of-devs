@@ -12,7 +12,7 @@ class WorkspaceCategories extends Component
     {
         return view('livewire.components.workspace-categories', [
             'categories' => WorkspaceCategory::orderBy('title')->withCount(['workspaces'])->get(),
-            'workspaces' => Workspace::count()
+            'workspaces' => Workspace::where('is_public', true)->count()
         ]);
     }
 }
