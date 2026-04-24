@@ -1,4 +1,4 @@
-<nav class="flex flex-col p-6 h-full border-x border-dark-light-100 bg-dark w-120" x-data="{ add: true }">
+<nav class="flex flex-col p-6 h-full border-x border-dark-light-100 bg-dark w-120" x-data="{ add: false }">
     <div class="" x-data="{ open: false }">
         <div class="flex flex-col">
             <h1 class="text-xl text-txt-2 font-semibold mb-3">About the channel</h1>
@@ -11,13 +11,13 @@
             <p class="text-txt-2 text-sm mb-3">{{ $channel->description }}</p>
             <h1 class="text-xl text-txt-2 font-semibold my-3">Quick actions</h1>
             <div class="grid grid-cols-4 gap-3">
-                <button class="flex flex-col justify-center items-center">
+                <button @click="add = true" class="flex flex-col justify-center items-center">
                     <div class="bg-dark-100 border border-white/10 rounded-full h-10 w-10 flex items-center justify-center">
                         <img src="https://api.iconify.design/material-symbols:person-add.svg?color=%23bdbdbd" width="18px">
                     </div>
                     <span class="text-white text-[12px] mt-1">Add</span>
                 </button>
-                <button @click="add = !add" class="flex flex-col justify-center items-center">
+                <button class="flex flex-col justify-center items-center">
                     <div class="bg-dark-100 border border-white/10 rounded-full h-10 w-10 flex items-center justify-center">
                         <img src="https://api.iconify.design/mdi:magnify-expand.svg?color=%23bdbdbd" width="18px">
                     </div>
@@ -37,7 +37,7 @@
                 </button>
             </div>
             
-            <div class="w-full mt-6">
+            <div class="w-full mt-6 border-b border-white/10 pb-3" x-show="add" x-cloak x-transition @click.away="add = false">
                 <h3 class="text-white mb-3">Add member in the channel</h3>
                 @session('added')
                     <x-alert-success>{{ $value }}</x-alert-success>
@@ -70,6 +70,9 @@
                 @endforeach
                 @if ($channel->channel_members_count > 10) <p class="text-main text-sm"> and more ...</p> @endif
             @endif
+        </div>
+        <div wire:loading wire:target="add_user, search">
+            <x-alert-processing />
         </div>
     </div>
 </nav>

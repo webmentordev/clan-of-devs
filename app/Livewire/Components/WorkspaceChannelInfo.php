@@ -46,12 +46,17 @@ class WorkspaceChannelInfo extends Component
     {
         try {
             $user = User::where('username', $username)->firstOrFail();
-            ChannelMember::create([
+            $member = ChannelMember::where(['channel_id' => $this->channel->id, 'user_id' => $user->id]);
+            if(!$member){
+                ChannelMember::create([
                 'workspace_id' => $this->channel->workspace_id,
                 'channel_id' => $this->channel->id,
                 'user_id' => $user->id,
             ]);
             session()->flash('added', "{$user->name} has been added to the channel");
+            }else{
+                 session()->flash('add_failed', 'Already a member');
+            }
             $this->updatedSearch();
         } catch (\Exception $e) {
             session()->flash('add_failed', 'Failed to add member');
