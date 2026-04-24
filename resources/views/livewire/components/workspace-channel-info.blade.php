@@ -1,4 +1,4 @@
-<nav class="flex flex-col p-6 h-full border-x border-dark-light-100 bg-dark w-120">
+<nav class="flex flex-col p-6 h-full border-x border-dark-light-100 bg-dark w-120" x-data="{ add: true }">
     <div class="" x-data="{ open: false }">
         <div class="flex flex-col">
             <h1 class="text-xl text-txt-2 font-semibold mb-3">About the channel</h1>
@@ -17,7 +17,7 @@
                     </div>
                     <span class="text-white text-[12px] mt-1">Add</span>
                 </button>
-                <button class="flex flex-col justify-center items-center">
+                <button @click="add = !add" class="flex flex-col justify-center items-center">
                     <div class="bg-dark-100 border border-white/10 rounded-full h-10 w-10 flex items-center justify-center">
                         <img src="https://api.iconify.design/mdi:magnify-expand.svg?color=%23bdbdbd" width="18px">
                     </div>
@@ -36,6 +36,26 @@
                     <span class="text-white text-[12px] mt-1">More</span>
                 </button>
             </div>
+            
+            <div class="w-full mt-6">
+                <h3 class="text-white mb-3">Add member in the channel</h3>
+                @session('added')
+                    <x-alert-success>{{ $value }}</x-alert-success>
+                @endsession
+                @session('add_failed')
+                    <p class="my-3 text-main bg-main/10 p-3 rounded-lg border border-main">{{ $value }}</p>
+                @endsession
+                <x-input class="border-none bg-dark-100 text-white mb-3" wire:model.live.debounce.1000ms="search" placeholder="Search by email or username" />
+                @forelse ($users as $user)
+                    <div class="flex items-center justify-between">
+                        <x-cards.mini-profile :name="$user->name" :avatar="$user->get_avatar()" />
+                        <button  wire:click="add_user('{{ $user->username }}')" class="py-1 px-3 rounded-lg bg-main text-white text-sm">Add</button>
+                    </div>
+                @empty
+                    <p class="text-gray-400">No users found</p>
+                @endforelse
+            </div>
+
             @if ($channel->is_private && $channel->type == 'text')
                 <div class="flex flex-col my-3 pt-6 border-t border-white/5">
                     <h1 class="text-xl text-txt-2 font-semibold mb-1">Private Members</h1>
