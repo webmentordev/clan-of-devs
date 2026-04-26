@@ -3,13 +3,14 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PasswordController;
 use Illuminate\Support\Facades\Route;
-Route::livewire('/', "home")->name('home');
-Route::livewire('/setup', "setup")->name('setup');
 
 Route::middleware(['guest'])->group(function(){
     // Authentication routes
     Route::get('/login', [AuthController::class, 'index'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
+
+    // System setup page
+    Route::livewire('/setup', "setup")->name('setup');
 
     // Password reset routes
     Route::get('/forgot-password', [PasswordController::class, 'index'])->name('password.request');
@@ -19,6 +20,12 @@ Route::middleware(['guest'])->group(function(){
 });
 
 Route::middleware(['auth'])->group(function(){
+    // Home page
+    Route::livewire('/', 'home')->name('home');
+
+    // Text Channel page
+    Route::livewire('/channel/{channel:unique_id}', "panel.text-channel")->name('channel');
+    
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });

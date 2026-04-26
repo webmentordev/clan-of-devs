@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Channel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,7 +19,8 @@ class AuthController extends Controller
         ]);
         if (Auth::attempt($credentials, true)) {
             $request->session()->regenerate();
-            return redirect()->route('workspaces');
+            $general_chat = Channel::where('title', 'general-chat')->first();
+            return redirect()->route('channel', ['channel' => $general_chat->unique_id]);
         }
         return back()->with('failed', "The provided credentials do not match our records.");
     }

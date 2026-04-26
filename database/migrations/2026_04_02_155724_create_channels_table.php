@@ -15,6 +15,7 @@ return new class extends Migration
             $table->boolean('is_deletable')->default(true);
             $table->enum('type', ['text', 'voice']);
             $table->boolean('is_private')->default(false);
+            $table->boolean('is_default')->default(false);
             $table->string('unique_id');
             $table->timestamps();
         });
