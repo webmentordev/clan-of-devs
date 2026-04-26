@@ -13,7 +13,6 @@ return new class extends Migration
             $table->text('message');
             $table->text('files')->nullable();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('workspace_id')->constrained()->cascadeOnDelete();
             $table->foreignId('channel_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });

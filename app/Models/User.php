@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'username', 'avatar', 'email', 'password', 'login_type', 'google_id', 'google_token', 'google_refresh_token', 'google_avatar', 'is_admin', 'is_super_admin', 'is_active', 'is_banned'])]
+#[Fillable(['name', 'avatar', 'email', 'password', 'role', 'is_active'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -23,9 +23,6 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     public function get_avatar(){
-        if($this->google_avatar){
-            return $this->google_avatar;
-        }
         return $this->avatar ? config('app.url'). '/storage/'. $this->avatar : config('app.url'). '/assets/avatar.png';
     }
 }

@@ -10,8 +10,7 @@ return new class extends Migration
     {
         Schema::create('channel_members', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->comment('Member of a workspace user ID')->constrained()->cascadeOnDelete();
-            $table->foreignId('workspace_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('channel_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
