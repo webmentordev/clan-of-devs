@@ -1,6 +1,6 @@
 <section class="flex h-screen">
     <nav class="flex flex-col p-3 h-full border-x border-dark-light-100 w-70 relative">
-        <div class="" x-data="{ text_open: true, voice_open: true }">
+        <div class="" x-data="{ text_open: true, voice_open: true, create_channel: false }">
             <div class="flex items-center justify-between mb-4 text-main" x-data="{ setting: false }">
                 <div class="flex items-center">
                     <h2 class="mr-2">{{ Str::limit(config('app.name'), 15, '...')}}</h2>
@@ -8,39 +8,104 @@
             </div>
             
             {{-- Text Channels --}}
-            <button class="w-full flex items-center mb-2" @click="text_open = !text-open">
-                <img src="https://api.iconify.design/cuida:caret-down-outline.svg?color=%23888888" width="20px">
-                <span class="ml-2 text-white font-semibold text-sm">Text channels</span>
-            </button>
-            <div class="flex flex-col">
+            <div class="flex items-center justify-between mb-2">
+                <button class="w-full flex items-center" @click="text_open = !text_open">
+                    <img src="https://api.iconify.design/cuida:caret-down-outline.svg?color=%23888888" width="20px" :class="{ '-rotate-90': !text_open }">
+                    <span class="ml-2 text-white font-semibold text-sm">Text channels</span>
+                </button>
+                <button @click="create_channel = true" wire:click="$set('channel_type', 'text')">
+                    <img src="https://api.iconify.design/material-symbols:add-2-rounded.svg?color=%23ffa0a1" width="20px">
+                </button>
+            </div>
+            <div class="flex flex-col" x-show="text_open" x-cloak x-transition>
                 @foreach ($channels as $txtChannel)
-                    @if($txtChannel->type == 'text')
+                    @if($txtChannel->type == 'text' )
                         @if (!$txtChannel->is_private || $txtChannel->isMember(auth()->id()))
                             <a href="{{ route('channel', $txtChannel->unique_id) }}" wire:navigate class="flex items-center text-sm text-txt-2 font-semibold mb-1 
-                            @if ($channel->unique_id == $txtChannel->unique_id)
-                                border-main bg-dark border-r-4
-                            @endif py-1 px-2 w-full"> 
-                            @if (!$txtChannel->is_private)
-                                <img src="https://api.iconify.design/clarity:hashtag-solid.svg?color=%23e3e3e3" width="13"><strong class="ml-2">
-                            @else
-                                <img src="https://api.iconify.design/material-symbols-light:lock.svg?color=%23e3e3e3" width="17"><strong class="ml-2">
-                            @endif {{ $txtChannel->title }}</strong></a>
+                                @if ($channel->unique_id == $txtChannel->unique_id)
+                                    border-main bg-dark border-r-4
+                                @endif py-1 px-2 w-full"> 
+                                @if (!$txtChannel->is_private)
+                                    <img src="https://api.iconify.design/clarity:hashtag-solid.svg?color=%23e3e3e3" width="13"><strong class="ml-2" title="{{ $txtChannel->title }}">
+                                @else
+                                    <img src="https://api.iconify.design/material-symbols-light:lock.svg?color=%23e3e3e3" width="17"><strong class="ml-2" title="{{ $txtChannel->title }}">
+                                @endif {{ Str::limit($txtChannel->title, 18, '...') }}</strong></a>
                         @endif
                     @endif
                 @endforeach
             </div>
 
             {{-- Vocie Channels --}}
-            <button class="w-full flex items-center mb-2 mt-8" @click="voice_open = !text-open">
-                <img src="https://api.iconify.design/cuida:caret-down-outline.svg?color=%23888888" width="20px">
-                <span class="ml-2 text-white font-semibold text-sm">Voice channels</span>
-            </button>
-            <div class="flex flex-col">
+            <div class="flex items-center justify-between mt-3 mb-2">
+                <button class="w-full flex items-center" @click="voice_open = !voice_open">
+                    <img src="https://api.iconify.design/cuida:caret-down-outline.svg?color=%23888888" width="20px" :class="{ '-rotate-90': !voice_open }">
+                    <span class="ml-2 text-white font-semibold text-sm">Voice channels</span>
+                </button>
+                <button @click="create_channel = true" wire:click="$set('channel_type', 'voice')">
+                    <img src="https://api.iconify.design/material-symbols:add-2-rounded.svg?color=%23ffa0a1" width="20px">
+                </button>
+            </div>
+            <div class="flex flex-col" x-show="voice_open" x-cloak x-transition>
                 @foreach ($channels as $vChannel)
                     @if($vChannel->type == 'voice')
-                        <button class="flex items-center text-sm text-txt-2 font-semibold mb-1 py-1 px-2 w-full"><img src="https://api.iconify.design/mdi:volume-high.svg?color=%23e3e3e3" width="16"> <strong class="ml-2">{{ $vChannel->title }}</strong></button>
+                        <button class="flex items-center text-sm text-txt-2 font-semibold mb-1 py-1 px-2 w-full"><img src="https://api.iconify.design/mdi:volume-high.svg?color=%23e3e3e3" width="16"> <strong title="{{ $vChannel->title }}" class="ml-2">{{ Str::limit($vChannel->title, 18, '...') }}</strong></button>
                     @endif
                 @endforeach
+            </div>
+
+            <div class="z-50 top-0 left-0 bg-dark/10 backdrop-blur-lg w-full h-full fixed" x-show="create_channel" x-cloak x-transition>
+                <div class="w-full h-full flex items-center justify-center" @click.self="create_channel = false">
+                    <div class="max-w-2xl w-full p-6 bg-dark border border-white/10 rounded-lg">
+                        <h3 class="text-white mb-3 text-lg">Create new channel</h3>
+                        @session('success')
+                            <x-alert-success>{{ $value }}</x-alert-success>
+                        @endsession
+                        @session('failed')
+                            <x-alert-failed>{{ $value }}</x-alert-failed>
+                        @endsession
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="w-full mb-3">
+                                <x-dark.label for="channel_type">Channel type</x-dark.label>
+                                <x-dark.select id="channel_type" wire:model="channel_type" required>
+                                    <option value="text">Text channel</option>
+                                    <option value="voice">Voice channel</option>
+                                </x-dark.select>
+                                @error('channel_type')
+                                    <x-error>{{ $message }}</x-error>
+                                @enderror
+                            </div>
+                            <div class="w-full mb-3">
+                                <x-dark.label for="is_private">Channel visiblity</x-dark.label>
+                                <x-dark.select wire:model="is_private" required>
+                                    <option value="0">Public</option>
+                                    <option value="1">Private</option>
+                                </x-dark.select>
+                                @error('is_private')
+                                    <x-error>{{ $message }}</x-error>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="w-full mb-3">
+                            <x-dark.label for="channel_title">Channel title <span class="text-main">(unique)</span></x-dark.label>
+                            <x-dark.input id="channel_title" wire:model="channel_title" required />
+                            @error('channel_title')
+                                <x-error>{{ $message }}</x-error>
+                            @enderror
+                        </div>
+                        @if ($channel_type == 'text')
+                            <div class="w-full mb-3">
+                                <x-dark.label for="description">Channel description</x-dark.label>
+                                <x-dark.textarea id="description" rows="6" wire:model="description" required></x-dark.textarea>
+                                @error('description')
+                                    <x-error>{{ $message }}</x-error>
+                                @enderror
+                            </div>
+                        @endif
+                        <button wire:click="create_new_channel" class="py-1 px-4 bg-main text-white rounded-lg">
+                            Create
+                        </button>
+                    </div>
+                </div>
             </div>
 
             {{-- Members --}}
@@ -77,7 +142,7 @@
         <div class="h-full">
             <div class="w-full border-b border-dark-light-100 pb-3">
                 <div class="flex items-center mb-3">
-                    <h1 class="text-2xl text-white flex items-center"><img src="https://api.iconify.design/clarity:hashtag-solid.svg?color=%23e3e3e3" width="22px"> general</h1>
+                    <h1 class="text-2xl text-white flex items-center"><img src="https://api.iconify.design/clarity:hashtag-solid.svg?color=%23e3e3e3" width="22px"> {{ $channel->title }}</h1>
                     @if ($channel->is_private)
                         <div class="relative group">
                             <img src="https://api.iconify.design/iconamoon:lock-bold.svg?color=%2315ef57" width="22px" class="ml-2">
@@ -93,7 +158,7 @@
                 </div>
             </div>
             <div class="mt-4 max-h-178 overflow-y-scroll">
-                @forelse ($messages as $single_message)
+                @forelse ($chat_messages as $single_message)
                     <div class="flex mb-2 p-2 group hover:bg-dark-100 transition-all rounded-md" x-data="{ open: false, shiftHeld: false }"  
                         @keydown.shift.window="shiftHeld = true" 
                         @keyup.shift.window="shiftHeld = false">
@@ -137,12 +202,14 @@
     <nav class="flex flex-col p-6 h-full border-x border-dark-light-100 bg-dark w-110" x-data="{ add: false }">
         <div class="" x-data="{ open: false }">
             <div class="flex flex-col">
-                <h1 class="text-xl text-txt-2 font-semibold mb-3">About the channel</h1>
-                <div class="flex items-center border-t border-light">
-                    <h2 class="text-2xl text-main font-semibold mb-3 pt-3">#{{ $channel->title }}</h2> 
+                <div class="flex items-center justify-between mb-3">
+                    <h1 class="text-xl text-txt-2 font-semibold">About the channel</h1>
                     @if ($channel->is_private)
                         <strong class="py-1 px-3 ml-2 rounded-lg border border-green-500 text-green-500 text-[10px]">Private</strong>
                     @endif
+                </div>
+                <div class="border-t border-light">
+                    <h2 class="text-2xl text-main font-semibold mb-3 pt-3">#{{ $channel->title }}</h2>
                 </div>
                 <p class="text-txt-2 text-sm mb-3">{{ $channel->description }}</p>
                 <h1 class="text-xl text-txt-2 font-semibold my-3">Quick actions</h1>
@@ -207,7 +274,7 @@
                     @if ($channel->channel_members_count > 10) <p class="text-main text-sm"> and more ...</p> @endif
                 @endif
             </div>
-            <div wire:loading wire:target="add_user, search">
+            <div wire:loading wire:target="add_user, search, channel_type, create_new_channel">
                 <x-alert-processing />
             </div>
         </div>
