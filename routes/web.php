@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PasswordController;
+use App\Mail\AddMember;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['guest'])->group(function(){

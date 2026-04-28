@@ -3,12 +3,15 @@
 namespace App\Livewire\Panel;
 
 use App\Events\MessageCreated;
+use App\Mail\AddMember;
 use App\Models\Channel;
 use App\Models\ChannelMember;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\On;
@@ -22,6 +25,8 @@ class TextChannel extends Component
     public $channel, $message, $files = [];
 
     public $channel_type = "text", $channel_title = '', $description = "", $is_private = 0;
+
+    public $email, $name, $role = 'common';
 
     public Collection $chat_messages;
 
@@ -71,6 +76,7 @@ class TextChannel extends Component
     }
 
     public function create_new_channel(){
+        $this->authorize('is_admin');
         $this->validate([
             'channel_type' => ['required', Rule::in(['text', 'voice'])],
             'is_private' => ['required', 'boolean'],
@@ -94,5 +100,47 @@ class TextChannel extends Component
         ]);
         $this->reset(['channel_title', 'channel_type', 'description', 'is_private']);
         return session()->flash('success', 'Channel created!');
+    }
+
+
+    public function add_new_member(){
+        $this->authorize('is_owner');
+        
+        $this->validate([
+            'name' => ['required', 'max:255'],
+            'email' => ['required', 'max:255', 'unique:users,email'],
+            'role' => ['required', Rule::in(['admin', 'common'])]
+        ]);
+        $domain = config('app.email_domain');
+        if(Str::afterLast($this->email, '@') == $domain || $domain == ''){
+            $password = $this->randomPassword(12);
+            $user = User::create([
+                'name' => $this->name,
+                'email' => $this->email,
+                'role' => $this->role,
+                'password' => $password
+            ]);
+            $resetToken = Password::createToken($user);
+            Mail::to($this->email)->send(new AddMember(
+                $user,
+                $password,
+                $resetToken
+            ));
+            $this->reset(['name', 'email', 'role']);
+            return session()->flash('add_success', 'User has been added.');
+        }else{
+            return session()->flash('add_failed', 'Add user with professional email @'. $domain);
+        }
+    }
+
+    private function randomPassword($length = 8) {
+        $alphabet = 'abcdefghijklmnopqrs!@#$%^&*()_+tuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+        $pass = array();
+        $alphaLength = strlen($alphabet) - 1;
+        for ($i = 0; $i < $length; $i++) {
+            $n = rand(0, $alphaLength);
+            $pass[] = $alphabet[$n];
+        }
+        return implode($pass);
     }
 }

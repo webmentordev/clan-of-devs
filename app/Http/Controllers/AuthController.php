@@ -19,7 +19,7 @@ class AuthController extends Controller
         ]);
         if (Auth::attempt($credentials, true)) {
             $request->session()->regenerate();
-            $general_chat = Channel::where('title', 'general-chat')->first();
+            $general_chat = Channel::where(['title' => 'general', 'type' => 'text'])->first();
             return redirect()->route('channel', ['channel' => $general_chat->unique_id]);
         }
         return back()->with('failed', "The provided credentials do not match our records.");
