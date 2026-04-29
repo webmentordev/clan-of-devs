@@ -33,7 +33,7 @@ class TextChannel extends Component
     public function mount(Channel $channel){
         $this->channel = $channel->load(['channel_members'])->loadCount('channel_members');
         $this->fill([
-            'chat_messages' => Message::where('channel_id', $this->channel->id)->take(20)->get()
+            'chat_messages' => Message::where('channel_id', $this->channel->id)->latest()->take(20)->get()->reverse()
         ]);
     }
     
