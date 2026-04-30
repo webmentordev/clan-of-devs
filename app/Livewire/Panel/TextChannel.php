@@ -143,4 +143,10 @@ class TextChannel extends Component
         }
         return implode($pass);
     }
+
+    public function delete(Message $message){
+        $this->authorize('delete_message', $message);
+        $message->delete();
+        $this->chat_messages = $this->chat_messages->filter(fn($msg) => $msg->id !== $message->id);
+    }
 }

@@ -210,9 +210,14 @@
                     @endif
                 </div>
                 <div class="flex items-center justify-center w-fit">
-                    <img src="https://api.iconify.design/material-symbols:person.svg?color=%23ffffff" width="20px">
+                    @if ($channel->is_private)
+                        <img src="https://api.iconify.design/material-symbols:person.svg?color=%23ffffff" width="20px"> 
+                    @endif
                     <p class="text-txt-2 text-sm ml-1">
-                        {{ $channel->member_count_label }} - {{ $channel->description }}
+                        @if ($channel->is_private)
+                            {{ $channel->member_count_label }} - 
+                        @endif
+                        {{ $channel->description }}
                     </p>
                 </div>
             </div>
@@ -233,11 +238,15 @@
                                         <button class="py-0.5 px-2 rounded-md bg-dark-100 border border-dark-light-100" @click="open = true">
                                             <img src="https://api.iconify.design/mdi:dots-horizontal.svg?color=%23e3e3e3" width="18px">
                                         </button>
-                                        <button x-show="shiftHeld" wire:click="delete" title="Delete the message">
-                                            <img src="https://api.iconify.design/material-symbols:delete-outline-sharp.svg?color=%23ef1515" width="18px">
-                                        </button>
+                                        @can('delete_message', $single_message)
+                                            <button x-show="shiftHeld" wire:click="delete({{ $single_message->id }})"  title="Delete the message">
+                                                <img src="https://api.iconify.design/material-symbols:delete-outline-sharp.svg?color=%23ef1515" width="18px">
+                                            </button>
+                                        @endcan
                                         <div class="absolute bg-dark/80 backdrop-blur-sm border border-dark-light-100 rounded-lg p-2 top-8 right-0" style="width: 250px" @click.away="open = false" x-show="open" x-cloak x-transition>
-                                            <x-buttons.drop-btn wire:click="delete" :first='true'>Delete</x-buttons.drop-btn>
+                                            @can('delete_message', $single_message)
+                                                <x-buttons.drop-btn wire:click="delete({{ $single_message->id }})" :first='true'>Delete</x-buttons.drop-btn>
+                                            @endcan
                                         </div>
                                     </div>
                                 </div>
