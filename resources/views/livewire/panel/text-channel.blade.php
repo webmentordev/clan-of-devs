@@ -1,6 +1,6 @@
-<section class="flex h-screen">
+<section class="flex h-screen" x-data="{ update_profile_modal: false }">
     <nav class="flex flex-col p-3 h-full border-x border-dark-light-100 w-70 relative">
-        <div class="" x-data="{ text_open: true, voice_open: true, create_channel: false, add_member: false, config: false }">
+        <div class="" x-data="{ text_open: $persist(false).as('text-open'), voice_open: $persist(false).as('voice-open'), create_channel: false, add_member: false, config: false }">
             <div class="flex items-center justify-between mb-4 text-main" x-data="{ setting: false }">
                 <div class="flex items-center">
                     <h2 class="mr-2">{{ Str::limit(config('app.name'), 15, '...')}}</h2>
@@ -48,7 +48,7 @@
             </div>
 
             {{-- Vocie Channels --}}
-            <div class="flex items-center justify-between mt-3 mb-2">
+            <div class="flex items-center justify-between mt-8 mb-2">
                 <button class="w-full flex items-center" @click="voice_open = !voice_open">
                     <img src="https://api.iconify.design/cuida:caret-down-outline.svg?color=%23888888" width="20px" :class="{ '-rotate-90': !voice_open }">
                     <span class="ml-2 text-white font-semibold text-sm">Voice channels</span>
@@ -166,6 +166,7 @@
                                         @enderror
                                     </div>
                                 <p class="text-txt-1">* Password will be auto generated & sent in the email.</p>
+                                <p class="text-txt-1">* User will be able to update the password & name.</p>
                                 <button wire:click="add_new_member" class="py-1 mt-3 px-4 bg-main text-white rounded-lg">
                                     Add & send email
                                 </button>
@@ -192,7 +193,39 @@
                         <span class="text-txt-1 text-[10px]">Online</span>
                     </div>
                 </div>
-                <img src="https://api.iconify.design/material-symbols:settings.svg?color=%23bdbdbd" width="18px">
+                <button @click="update_profile_modal = true">
+                    <img src="https://api.iconify.design/material-symbols:settings.svg?color=%23bdbdbd" width="18px">
+                </button>
+            </div>
+        </div>
+        <div class="z-50 top-0 left-0 bg-dark/10 backdrop-blur-lg w-full h-full fixed" x-show="update_profile_modal" x-cloak x-transition>
+            <div class="w-full h-full flex items-center justify-center" @click.self="update_profile_modal = false">
+                <div class="max-w-2xl w-full p-6 bg-dark border border-white/10 rounded-lg">
+                    <h3 class="text-white mb-3 text-lg">Update profile</h3>
+                    @session('profile_success')
+                        <x-alert-success>{{ $value }}</x-alert-success>
+                    @endsession
+                    <div class="m-auto w-50 h-50 bg-center bg-cover rounded-full"
+                        style="background-image: url('{{ $avatar ? $avatar?->temporaryUrl() : $profile_avatar }}')">
+                    </div>
+                    <div class="w-full mb-3">
+                        <x-dark.label for="user_name">Name</x-dark.label>
+                        <x-dark.input id="user_name" wire:model="user_name" required />
+                        @error('user_name')
+                            <x-error>{{ $message }}</x-error>
+                        @enderror
+                    </div>
+                    <div class="w-full mb-3">
+                        <x-dark.label for="avatar">Avatar</x-dark.label>
+                        <x-dark.input type="file" id="avatar" wire:model="avatar" accept="image/*" />
+                        @error('avatar')
+                            <x-error>{{ $message }}</x-error>
+                        @enderror
+                    </div>
+                    <button wire:click="update_profile" class="py-1 px-4 bg-main text-white rounded-lg">
+                        Update
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
@@ -344,7 +377,7 @@
                     @if ($channel->channel_members_count > 10) <p class="text-main text-sm"> and more ...</p> @endif
                 @endif
             </div>
-            <div wire:loading wire:target="add_user, search, channel_type, create_new_channel, add_new_member">
+            <div wire:loading wire:target="add_user, search, channel_type, create_new_channel, add_new_member, update_profile, new_avatar">
                 <x-alert-processing />
             </div>
         </div>

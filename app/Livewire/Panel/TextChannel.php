@@ -12,6 +12,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\On;
@@ -22,11 +23,13 @@ class TextChannel extends Component
 {
     use WithFileUploads;
     
-    public $channel, $message, $files = [];
+    public $channel, $message, $files = [], $search = '';
 
     public $channel_type = "text", $channel_title = '', $description = "", $is_private = 0;
 
     public $email, $name, $role = 'common';
+
+    public $user_name, $avatar = null, $profile_avatar = null;
 
     public Collection $chat_messages;
 
@@ -35,6 +38,9 @@ class TextChannel extends Component
         $this->fill([
             'chat_messages' => Message::where('channel_id', $this->channel->id)->latest()->take(20)->get()->reverse()
         ]);
+        $user = Auth::user();
+        $this->user_name = $user->name;
+        $this->profile_avatar = $user->get_avatar();
     }
     
     public function render()
@@ -148,5 +154,31 @@ class TextChannel extends Component
         $this->authorize('delete_message', $message);
         $message->delete();
         $this->chat_messages = $this->chat_messages->filter(fn($msg) => $msg->id !== $message->id);
+    }
+
+    public function update_profile(){
+        $this->validate([
+            'user_name' => ['required', 'max:255'],
+            'avatar' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:2024'],
+        ]);
+
+        $user = Auth::user();
+        $avatar = null;
+        if($this->avatar){
+            $avatar = $this->avatar->store('avatars');
+            if (!str_contains($this->profile_avatar, 'avatar.png')) {
+                $oldPath = str_replace(config('app.url') . '/storage/', '', $this->profile_avatar);
+                if (Storage::disk('public_disk')->exists($oldPath)) {
+                    Storage::disk('public_disk')->delete($oldPath);
+                }
+            }
+        }
+        $user->update(array_filter([
+            'name' => $this->user_name,
+            'avatar' => $avatar
+        ]));
+        $this->reset(['avatar']);
+        $this->profile_avatar = Auth::user()->get_avatar();
+        return session()->flash('profile_success', 'Profile updated!');
     }
 }
