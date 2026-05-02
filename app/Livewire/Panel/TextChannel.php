@@ -31,6 +31,8 @@ class TextChannel extends Component
 
     public $user_name, $avatar = null, $profile_avatar = null;
 
+    public $search_user = "";
+
     public Collection $chat_messages;
 
     public function mount(Channel $channel){
@@ -42,12 +44,19 @@ class TextChannel extends Component
         $this->user_name = $user->name;
         $this->profile_avatar = $user->get_avatar();
     }
-    
+
     public function render()
     {
+        $this->channel->loadCount('channel_members');
+        $users = User::get();
+        $find_users = [];
+        if($this->search_user != ''){
+            $find_users = User::whereRaw('LOWER(name) LIKE ?', ['%'. strtolower($this->search_user).'%'])->get();
+        }
         return view('livewire.panel.text-channel', [
             'channels' => Channel::get(),
-            'users' => User::get()
+            'members' => $users,
+            'users' => $find_users
         ]);
     }
 
@@ -180,5 +189,23 @@ class TextChannel extends Component
         $this->reset(['avatar']);
         $this->profile_avatar = Auth::user()->get_avatar();
         return session()->flash('profile_success', 'Profile updated!');
+    }
+
+    public function add_to_channel(User $user)
+    {
+        try {
+            $member = ChannelMember::where(['channel_id' => $this->channel->id, 'user_id' => $user->id])->first();
+            if(!$member){
+                ChannelMember::create([
+                    'channel_id' => $this->channel->id,
+                    'user_id' => $user->id,
+                ]);
+                session()->flash('added', "{$user->name} has been added to the channel");
+            }else{
+                session()->flash('add_failed', 'Already a member');
+            }
+        } catch (\Exception $e) {
+            session()->flash('add_failed', 'Failed to add member');
+        }
     }
 }

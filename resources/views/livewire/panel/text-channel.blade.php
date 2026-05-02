@@ -176,7 +176,7 @@
                 @endcan
             </div>
             <div class="flex flex-col">
-                @foreach ($users as $member)
+                @foreach ($members as $member)
                     <x-cards.mini-profile :name="$member->name" limit="10" :avatar="$member->get_avatar()" :you="$member->user_id == auth()->user()->id" />
                 @endforeach
             </div>
@@ -343,24 +343,28 @@
                     </button>
                 </div>
                 
-                <div class="w-full mt-6 border-b border-white/10 pb-3" x-show="add" x-cloak x-transition @click.away="add = false">
-                    <h3 class="text-white mb-3">Add member in the channel</h3>
-                    @session('added')
-                        <x-alert-success>{{ $value }}</x-alert-success>
-                    @endsession
-                    @session('add_failed')
-                        <p class="my-3 text-main bg-main/10 p-3 rounded-lg border border-main">{{ $value }}</p>
-                    @endsession
-                    <x-input class="border-none bg-dark-100 text-white mb-3" wire:model.live.debounce.1000ms="search" placeholder="Search by email or username" />
-                    @forelse ($users as $user)
-                        <div class="flex items-center justify-between">
-                            <x-cards.mini-profile :name="$user->name" :avatar="$user->get_avatar()" />
-                            <button  wire:click="add_user('{{ $user->username }}')" class="py-1 px-3 rounded-lg bg-main text-white text-sm">Add</button>
-                        </div>
-                    @empty
-                        <p class="text-gray-400">No users found</p>
-                    @endforelse
-                </div>
+
+                @can('is_admin')
+                    <div class="w-full mt-6 border-b border-white/10 pb-3" x-show="add" x-cloak x-transition @click.away="add = false">
+                        <h3 class="text-white mb-3">Add member in the channel</h3>
+                        @session('added')
+                            <x-alert-success>{{ $value }}</x-alert-success>
+                        @endsession
+                        @session('add_failed')
+                            <p class="my-3 text-main bg-main/10 p-3 rounded-lg border border-main">{{ $value }}</p>
+                        @endsession
+                        <x-input class="border-none bg-dark-100 text-white mb-3" wire:model.live.debounce.1000ms="search_user" placeholder="Search by name" />
+                        @forelse ($users as $user)
+                            <div class="flex items-center justify-between">
+                                <x-cards.mini-profile :name="$user->name" :avatar="$user->get_avatar()" />
+                                <button  wire:click="add_to_channel('{{ $user->id }}')" class="py-1 px-3 rounded-lg bg-main text-white text-sm">Add</button>
+                            </div>
+                        @empty
+                            <p class="text-gray-400">No users found</p>
+                        @endforelse
+                    </div>
+                @endcan
+
 
                 @if ($channel->is_private && $channel->type == 'text')
                     <div class="flex flex-col my-3 pt-6 border-t border-white/5">
@@ -377,7 +381,7 @@
                     @if ($channel->channel_members_count > 10) <p class="text-main text-sm"> and more ...</p> @endif
                 @endif
             </div>
-            <div wire:loading wire:target="add_user, search, channel_type, create_new_channel, add_new_member, update_profile, new_avatar">
+            <div wire:loading wire:target="add_user, search_user, channel_type, create_new_channel, add_new_member, update_profile, new_avatar, add_to_channel">
                 <x-alert-processing />
             </div>
         </div>

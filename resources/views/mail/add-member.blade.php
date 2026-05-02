@@ -9,7 +9,7 @@ Your account has been successfully created! Below are your login credentials and
 
 **Email Address:** {{ $user->email }}
 
-**Temporary Password:** `{{ $password }}`
+**Password:** `{{ $password }}`
 
 ## Important Security Steps
 
