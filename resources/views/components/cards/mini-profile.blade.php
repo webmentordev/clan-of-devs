@@ -1,5 +1,5 @@
 @props(['avatar', 'name', 'is_creator' => false, 'you' => false, 'limit' => 14])
-<div class="flex items-center mb-3">
+<div class="flex items-center mb-3" title="{{ $name }}">
     <div class="w-7 h-7 bg-cover bg-center rounded-full" style="background-image: url('{{ $avatar }}')"></div>
     <p class="ml-2 text-white text-sm">{{ Str::limit($name, $limit, '...') }} </p>
     @if ($is_creator)

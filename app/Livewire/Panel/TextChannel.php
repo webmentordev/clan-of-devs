@@ -117,7 +117,6 @@ class TextChannel extends Component
         return session()->flash('success', 'Channel created!');
     }
 
-
     public function add_new_member(){
         $this->authorize('is_owner');
         
@@ -200,12 +199,28 @@ class TextChannel extends Component
                     'channel_id' => $this->channel->id,
                     'user_id' => $user->id,
                 ]);
-                session()->flash('added', "{$user->name} has been added to the channel");
+                session()->flash('channel_success', "{$user->name} has been added to the channel");
             }else{
-                session()->flash('add_failed', 'Already a member');
+                session()->flash('channel_failed', 'Already a member');
             }
         } catch (\Exception $e) {
-            session()->flash('add_failed', 'Failed to add member');
+            session()->flash('channel_failed', 'Failed to add member');
+        }
+    }
+
+
+    public function channel_visibility()
+    {
+        if (!$this->channel->is_default) {
+            try {
+                $this->channel->is_private = !$this->channel->is_private;
+                $this->channel->save();
+                session()->flash('channel_success', 'Channel visibility updated!');
+            } catch (\Exception $e) {
+                session()->flash('channel_failed', 'Failed to update channel visibility.');
+            }
+        } else {
+            session()->flash('channel_failed', 'Default channel cannot be updated!');
         }
     }
 }

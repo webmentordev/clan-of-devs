@@ -1,20 +1,20 @@
 <section class="flex h-screen" x-data="{ update_profile_modal: false }">
-    <nav class="flex flex-col p-3 h-full border-x border-dark-light-100 w-70 relative">
-        <div class="" x-data="{ text_open: $persist(false).as('text-open'), voice_open: $persist(false).as('voice-open'), create_channel: false, add_member: false, config: false }">
-            <div class="flex items-center justify-between mb-4 text-main" x-data="{ setting: false }">
+    <nav class="flex flex-col p-3 h-full border-x border-dark-light-100 w-80 relative">
+        <div class="overflow-y-scroll hide-scrollbar" x-data="{ text_open: $persist(false).as('text-open'), voice_open: $persist(false).as('voice-open'), create_channel: false, add_member: false, config: false }">
+            <div class="flex items-center justify-between mb-2 text-main" x-data="{ setting: false }">
                 <div class="flex items-center">
                     <h2 class="mr-2">{{ Str::limit(config('app.name'), 15, '...')}}</h2>
                 </div>
                 <button @click="config = true">
                     <img src="https://api.iconify.design/material-symbols:settings.svg?color=%23bdbdbd" width="18px">
                 </button>
-                <div class="bg-dark-100 p-4 absolute top-12 left-1 z-10 border border-white/10 rounded-lg" style="width: 200px" @click.away="config = false" x-show="config" x-cloak x-transition>
-                    <button class="text-txt-2 mb-2">Settings</button>
-                    <form action="{{ route('logout') }}" method="post" class="pt-3 border-t border-white/10">
-                        @csrf
-                        <button class="py-2 rounded-lg w-full bg-main text-white text-sm">Logout</button>
-                    </form>
-                </div>
+            </div>
+            <div class="bg-dark-100 p-4 mb-3 border border-white/10 rounded-lg" @click.away="config = false" x-show="config" x-cloak x-transition>
+                <button class="text-txt-2 mb-2">Settings</button>
+                <form action="{{ route('logout') }}" method="post" class="pt-3 border-t border-white/10">
+                    @csrf
+                    <button class="py-2 rounded-lg w-full bg-main text-white text-sm">Logout</button>
+                </form>
             </div>
             
             {{-- Text Channels --}}
@@ -41,7 +41,8 @@
                                     <img src="https://api.iconify.design/clarity:hashtag-solid.svg?color=%23e3e3e3" width="13"><strong class="ml-2" title="{{ $txtChannel->title }}">
                                 @else
                                     <img src="https://api.iconify.design/material-symbols-light:lock.svg?color=%23e3e3e3" width="17"><strong class="ml-2" title="{{ $txtChannel->title }}">
-                                @endif {{ Str::limit($txtChannel->title, 18, '...') }}</strong></a>
+                                @endif {{ Str::limit($txtChannel->title, 18, '...') }}</strong>
+                            </a>
                         @endif
                     @endif
                 @endforeach
@@ -177,7 +178,7 @@
             </div>
             <div class="flex flex-col">
                 @foreach ($members as $member)
-                    <x-cards.mini-profile :name="$member->name" limit="10" :avatar="$member->get_avatar()" :you="$member->user_id == auth()->user()->id" />
+                    <x-cards.mini-profile :name="$member->name" limit="20" :avatar="$member->get_avatar()" :you="$member->user_id == auth()->user()->id" />
                 @endforeach
             </div>
         </div>
@@ -254,7 +255,7 @@
                     </p>
                 </div>
             </div>
-            <div class="mt-4 max-h-178 overflow-y-scroll">
+            <div class="mt-4 max-h-178 overflow-y-scroll hide-scrollbar">
                 <div class="space-y-2 sm:[overflow-anchor:none]">
                     @forelse ($chat_messages as $single_message)
                         <div class="flex mb-2 p-2 group hover:bg-dark-100 transition-all rounded-md" x-data="{ open: false, shiftHeld: false }"  
@@ -302,7 +303,7 @@
     </section>
 
 
-    <nav class="flex flex-col p-6 h-full border-x border-dark-light-100 bg-dark w-110" x-data="{ add: false }">
+    <nav class="flex flex-col p-6 h-full border-x border-dark-light-100 bg-dark w-110" x-data="{ add: false, channel_setting: false }">
         <div class="" x-data="{ open: false }">
             <div class="flex flex-col">
                 <div class="flex items-center justify-between mb-3">
@@ -315,44 +316,32 @@
                     <h2 class="text-2xl text-main font-semibold mb-3 pt-3">#{{ $channel->title }}</h2>
                 </div>
                 <p class="text-txt-2 text-sm mb-3">{{ $channel->description }}</p>
-                <h1 class="text-xl text-txt-2 font-semibold my-3">Quick actions</h1>
-                <div class="grid grid-cols-4 gap-3">
-                    <button @click="add = true" class="flex flex-col justify-center items-center">
-                        <div class="bg-dark-100 border border-white/10 rounded-full h-10 w-10 flex items-center justify-center">
-                            <img src="https://api.iconify.design/material-symbols:person-add.svg?color=%23bdbdbd" width="18px">
-                        </div>
-                        <span class="text-white text-[12px] mt-1">Add</span>
-                    </button>
-                    <button class="flex flex-col justify-center items-center">
-                        <div class="bg-dark-100 border border-white/10 rounded-full h-10 w-10 flex items-center justify-center">
-                            <img src="https://api.iconify.design/mdi:magnify-expand.svg?color=%23bdbdbd" width="18px">
-                        </div>
-                        <span class="text-white text-[12px] mt-1">Find</span>
-                    </button>
-                    <button class="flex flex-col justify-center items-center">
-                        <div class="bg-dark-100 border border-white/10 rounded-full h-10 w-10 flex items-center justify-center">
-                            <img src="https://api.iconify.design/material-symbols:call.svg?color=%23bdbdbd" width="18px">
-                        </div>
-                        <span class="text-white text-[12px] mt-1">Call</span>
-                    </button>
-                    <button class="flex flex-col justify-center items-center">
-                        <div class="bg-dark-100 border border-white/10 rounded-full h-10 w-10 flex items-center justify-center">
-                            <img src="https://api.iconify.design/solar:menu-dots-line-duotone.svg?color=%23bdbdbd" width="18px">
-                        </div>
-                        <span class="text-white text-[12px] mt-1">More</span>
-                    </button>
-                </div>
-                
-
                 @can('is_admin')
-                    <div class="w-full mt-6 border-b border-white/10 pb-3" x-show="add" x-cloak x-transition @click.away="add = false">
+                    <h1 class="text-xl text-txt-2 font-semibold my-3">Quick actions</h1>
+                    <div class="grid grid-cols-4 gap-3">
+                        <button @click="add = true" class="flex flex-col justify-center items-center">
+                            <div class="bg-dark-100 border border-white/10 rounded-full h-10 w-10 flex items-center justify-center">
+                                <img src="https://api.iconify.design/material-symbols:person-add.svg?color=%23bdbdbd" width="18px">
+                            </div>
+                            <span class="text-white text-[12px] mt-1">Add</span>
+                        </button>
+                        <button @click="channel_setting = true" class="flex flex-col justify-center items-center">
+                            <div class="bg-dark-100 border border-white/10 rounded-full h-10 w-10 flex items-center justify-center">
+                                <img src="https://api.iconify.design/solar:menu-dots-line-duotone.svg?color=%23bdbdbd" width="18px">
+                            </div>
+                            <span class="text-white text-[12px] mt-1">More</span>
+                        </button>
+                    </div>
+
+                    @session('channel_success')
+                        <x-alert-success>{{ $value }}</x-alert-success>
+                    @endsession
+                    @session('channel_failed')
+                        <x-alert-failed>{{ $value }}</x-alert-failed>
+                    @endsession
+
+                    <div class="w-full mt-3 border-b border-white/10 pb-3" x-show="add" x-cloak x-transition @click.away="add = false">
                         <h3 class="text-white mb-3">Add member in the channel</h3>
-                        @session('added')
-                            <x-alert-success>{{ $value }}</x-alert-success>
-                        @endsession
-                        @session('add_failed')
-                            <p class="my-3 text-main bg-main/10 p-3 rounded-lg border border-main">{{ $value }}</p>
-                        @endsession
                         <x-input class="border-none bg-dark-100 text-white mb-3" wire:model.live.debounce.1000ms="search_user" placeholder="Search by name" />
                         @forelse ($users as $user)
                             <div class="flex items-center justify-between">
@@ -363,25 +352,34 @@
                             <p class="text-gray-400">No users found</p>
                         @endforelse
                     </div>
+
+                    <div class="w-full mt-3 border-b border-white/10 pb-3" x-show="channel_setting" x-cloak x-transition @click.away="channel_setting = false">
+                        <h3 class="text-white mb-3">Update channel settings</h3>
+                        <form wire:submit="channel_visibility" class="flex items-center justify-between mb-2 last:mb-0">
+                            <span class="text-txt-2">Channel visibility</span>
+                            <x-simple-button type="submit">{{ $channel->is_private ? 'Private' : 'Public' }}</x-simple-button>
+                        </form>
+                    </div>
                 @endcan
-
-
+                
                 @if ($channel->is_private && $channel->type == 'text')
-                    <div class="flex flex-col my-3 pt-6 border-t border-white/5">
+                    <div class="flex flex-col my-3">
                         <h1 class="text-xl text-txt-2 font-semibold mb-1">Private Members</h1>
-                        <div class="flex items-center gap-1.5 py-2.5 border-y border-white/6">
+                        <div class="flex items-center gap-1.5">
                             <img src="https://api.iconify.design/lucide:users.svg?color=%236b7280" class="w-3.5 h-3.5" alt="">
                             @php $members = $channel->channel_members_count; @endphp
                             <span class="text-txt-2 text-xs">{{ $members }} {{ Str::plural('member', $members) }}</span>
                         </div>
                     </div>
-                    @foreach ($channel->channel_members as $member)
-                        <x-cards.mini-profile :name="$member->user->name" :avatar="$member->user->get_avatar()" :is_creator="$member->user->id == $channel->user_id" :you="$member->user->id == auth()->user()->id"/>
-                    @endforeach
-                    @if ($channel->channel_members_count > 10) <p class="text-main text-sm"> and more ...</p> @endif
+                    <div class="pt-3 border-t border-white/10">
+                        @foreach ($channel->channel_members as $member)
+                            <x-cards.mini-profile :name="$member->user->name" :avatar="$member->user->get_avatar()" :is_creator="$member->user->id == $channel->user_id" :you="$member->user->id == auth()->user()->id"/>
+                        @endforeach
+                        @if ($channel->channel_members_count > 10) <p class="text-main text-sm"> and more ...</p> @endif
+                    </div>
                 @endif
             </div>
-            <div wire:loading wire:target="add_user, search_user, channel_type, create_new_channel, add_new_member, update_profile, new_avatar, add_to_channel">
+            <div wire:loading wire:target="add_user, search_user, channel_type, create_new_channel, channel_visibility, add_new_member, update_profile, new_avatar, add_to_channel">
                 <x-alert-processing />
             </div>
         </div>
