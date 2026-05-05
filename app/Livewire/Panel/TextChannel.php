@@ -33,6 +33,8 @@ class TextChannel extends Component
 
     public $search_user = "";
 
+    public $voiceChannels = [], $is_connected = false;
+
     public Collection $chat_messages;
 
     public function mount(Channel $channel){
@@ -43,6 +45,11 @@ class TextChannel extends Component
         $user = Auth::user();
         $this->user_name = $user->name;
         $this->profile_avatar = $user->get_avatar();
+
+        $channels = Channel::where("type", "voice")->get();
+        foreach($channels as $single){
+            $this->voiceChannels[$single->unique_id] = [];
+        }
     }
 
     public function render()
@@ -222,5 +229,28 @@ class TextChannel extends Component
         } else {
             session()->flash('channel_failed', 'Default channel cannot be updated!');
         }
+    }
+
+    public function connectToVoice($channel_id){
+        $user = Auth::user();
+        foreach($this->voiceChannels as $id => $users) {
+            $this->voiceChannels[$id] = array_filter(
+                $users, 
+                fn($u) => $u->id !== $user->id
+            );
+        }
+        $this->is_connected = true;
+        $this->voiceChannels[$channel_id][] = $user;
+    }
+
+    public function disconnectVoice(){
+        $user = Auth::user();
+        foreach($this->voiceChannels as $id => $users) {
+            $this->voiceChannels[$id] = array_filter(
+                $users, 
+                fn($u) => $u->id !== $user->id
+            );
+        }
+        $this->is_connected = false;
     }
 }

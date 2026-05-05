@@ -1,4 +1,4 @@
-<section class="flex h-screen" x-data="{ update_profile_modal: false }">
+<section class="flex h-screen" x-data="{ update_profile_modal: false, connected: false }">
     <nav class="flex flex-col p-3 h-full border-x border-dark-light-100 w-80 relative">
         <div class="overflow-y-scroll hide-scrollbar" x-data="{ text_open: $persist(false).as('text-open'), voice_open: $persist(false).as('voice-open'), create_channel: false, add_member: false, config: false }">
             <div class="flex items-center justify-between mb-2 text-main" x-data="{ setting: false }">
@@ -117,7 +117,10 @@
             <div class="flex flex-col" x-show="voice_open" x-cloak x-transition>
                 @foreach ($channels as $vChannel)
                     @if($vChannel->type == 'voice')
-                        <button class="flex items-center text-sm text-txt-2 font-semibold mb-1 py-1 px-2 w-full"><img src="https://api.iconify.design/mdi:volume-high.svg?color=%23e3e3e3" width="16"> <strong title="{{ $vChannel->title }}" class="ml-2">{{ Str::limit($vChannel->title, 18, '...') }}</strong></button>
+                        <button wire:click='connectToVoice("{{ $vChannel->unique_id }}")' class="flex items-center text-sm text-txt-2 font-semibold mb-1 py-1 px-2 w-full"><img src="https://api.iconify.design/mdi:volume-high.svg?color=%23e3e3e3" width="16"> <strong title="{{ $vChannel->title }}" class="ml-2">{{ Str::limit($vChannel->title, 18, '...') }}</strong></button>
+                        @foreach ($voiceChannels[$vChannel->unique_id] as $connUser)
+                            <x-cards.mini-profile-voice :user="$connUser" />
+                        @endforeach
                     @endif
                 @endforeach
             </div>
@@ -194,9 +197,16 @@
                         <span class="text-txt-1 text-[10px]">Online</span>
                     </div>
                 </div>
-                <button @click="update_profile_modal = true">
-                    <img src="https://api.iconify.design/material-symbols:settings.svg?color=%23bdbdbd" width="18px">
-                </button>
+                <div class="flex items-center">
+                    <button @click="update_profile_modal = true">
+                        <img src="https://api.iconify.design/material-symbols:settings.svg?color=%23bdbdbd" width="18px">
+                    </button>
+                    @if ($is_connected)
+                        <button title="Disconnect" wire:click="disconnectVoice" class="ml-3 border border-red-600 flex items-center justify-center w-8 h-8 bg-red-600/10 rounded-full">
+                            <img src="https://api.iconify.design/material-symbols-light:phone-disabled.svg?color=%23eb2d2d" width="15px">
+                        </button>
+                    @endif
+                </div>
             </div>
         </div>
         <div class="z-50 top-0 left-0 bg-dark/10 backdrop-blur-lg w-full h-full fixed" x-show="update_profile_modal" x-cloak x-transition>

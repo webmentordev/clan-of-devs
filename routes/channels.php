@@ -2,6 +2,7 @@
 
 use App\Models\Channel;
 use App\Models\ChannelMember;
+use App\Models\User;
 use Illuminate\Support\Facades\Broadcast;
 
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
@@ -13,4 +14,9 @@ Broadcast::channel('channel.{channelId}', function ($user, $channelId) {
     if (! $channel) return false;
     if (! $channel->is_private) return true;
     return ChannelMember::where('user_id', $user->id)->where('channel_id', $channelId)->exists();
+});
+
+
+Broadcast::channel('channel.voice.{channel_id}', function(User $user, ChannelMember $channel_id){
+    return ["id" => $user->id, "name" => $user->name, "avatar" => $user->get_avatar()];
 });
