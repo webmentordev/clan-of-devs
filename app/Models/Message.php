@@ -4,10 +4,11 @@ namespace App\Models;
 
 use App\Models\Channel;
 use App\Models\User;
+use App\Models\WebHook;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['message', 'files', 'user_id', 'channel_id'])]
+#[Fillable(['message', 'files', 'user_id', 'channel_id', 'webhook_id'])]
 class Message extends Model
 {
     public function user()
@@ -18,5 +19,10 @@ class Message extends Model
     public function channel()
     {
         return $this->belongsTo(Channel::class);
+    }
+
+    public function webhook()
+    {
+        return $this->belongsTo(WebHook::class);
     }
 }

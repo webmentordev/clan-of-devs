@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\WebHook;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -24,5 +25,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function get_avatar(){
         return $this->avatar ? config('app.url'). '/storage/'. $this->avatar : config('app.url'). '/assets/avatar.png';
+    }
+
+    public function webhook(){
+        return $this->hasMany(WebHook::class);
     }
 }

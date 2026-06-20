@@ -32,4 +32,9 @@ class Channel extends Model
     {
         return $this->channel_members->contains('user_id', $userId);
     }
+
+    public function webhook()
+    {
+        return $this->hasMany(WebHook::class);
+    }
 }

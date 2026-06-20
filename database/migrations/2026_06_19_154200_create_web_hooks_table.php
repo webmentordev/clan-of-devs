@@ -8,18 +8,18 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('messages', function (Blueprint $table) {
+        Schema::create('web_hooks', function (Blueprint $table) {
             $table->id();
-            $table->text('message');
-            $table->text('files')->nullable();
+            $table->string('title');
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('channel_id')->constrained()->cascadeOnDelete();
+            $table->text('webhook');
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('messages');
+        Schema::dropIfExists('web_hooks');
     }
 };

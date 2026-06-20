@@ -313,7 +313,7 @@
     </section>
 
 
-    <nav class="flex flex-col p-6 h-full border-x border-dark-light-100 bg-dark w-110" x-data="{ add: false, channel_setting: false }">
+    <nav class="flex flex-col p-6 h-full border-x border-dark-light-100 bg-dark w-110" x-data="{ add: false, webhook: true, channel_setting: false }">
         <div class="" x-data="{ open: false }">
             <div class="flex flex-col">
                 <div class="flex items-center justify-between mb-3">
@@ -334,6 +334,12 @@
                                 <img src="https://api.iconify.design/material-symbols:person-add.svg?color=%23bdbdbd" width="18px">
                             </div>
                             <span class="text-white text-[12px] mt-1">Add</span>
+                        </button>
+                        <button @click="webhook = true" class="flex flex-col justify-center items-center">
+                            <div class="bg-dark-100 border border-white/10 rounded-full h-10 w-10 flex items-center justify-center">
+                                <img src="https://api.iconify.design/mingcute:webhook-line.svg?color=%23bdbdbd" width="18px">
+                            </div>
+                            <span class="text-white text-[12px] mt-1">Webhook</span>
                         </button>
                         <button @click="channel_setting = true" class="flex flex-col justify-center items-center">
                             <div class="bg-dark-100 border border-white/10 rounded-full h-10 w-10 flex items-center justify-center">
