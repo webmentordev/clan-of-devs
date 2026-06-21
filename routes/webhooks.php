@@ -14,22 +14,21 @@ Route::post("/{webhook}", function(Request $request, $webhook){
             ], 404);
         }
         $request->validate([
-            'content' => ['required', '4500']
+            'content' => ['required', 'string', 'max:4500']
         ]);
-
         $message = Message::create([
             'message' => $request->content,
             'channel_id' => $webhook->channel_id,
-            'webhook_id' => $webhook,
+            'webhook_id' => $webhook->id,
             'user_id' => null,
         ]);
-        broadcast(new MessageCreated($message));
+        broadcast(new MessageCreated($message))->toOthers();
         return response()->json([
             "message" => "Webhook call success!",
         ], 200);
     }catch(\Throwable $e){
         return response()->json([
-            "message" => "Something went wrong!",
+            "message" => $e->getMessage(),
         ], 500);
     }
 });

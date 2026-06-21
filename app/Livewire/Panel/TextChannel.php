@@ -8,6 +8,7 @@ use App\Models\Channel;
 use App\Models\ChannelMember;
 use App\Models\Message;
 use App\Models\User;
+use App\Models\WebHook;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -31,6 +32,8 @@ class TextChannel extends Component
 
     public $user_name, $avatar = null, $profile_avatar = null;
 
+    public $webhook_title = "";
+
     public $search_user = "";
 
     public $voiceChannels = [], $is_connected = false;
@@ -38,7 +41,7 @@ class TextChannel extends Component
     public Collection $chat_messages;
 
     public function mount(Channel $channel){
-        $this->channel = $channel->load(['channel_members'])->loadCount('channel_members');
+        $this->channel = $channel->load(['channel_members', 'webhooks'])->loadCount('channel_members');
         $this->fill([
             'chat_messages' => Message::where('channel_id', $this->channel->id)->latest()->take(20)->get()->reverse()
         ]);
@@ -70,7 +73,7 @@ class TextChannel extends Component
     #[On('echo-private:channel.{channel.id},MessageCreated')]
     public function messageCreated($event)
     {
-        $message = Message::with('user')->find($event['id']);
+        $message = Message::with(['user', 'webhook'])->find($event['id']);
         if ($message) {
             $this->chat_messages->push($message);
         }
@@ -252,5 +255,19 @@ class TextChannel extends Component
             );
         }
         $this->is_connected = false;
+    }
+
+    public function create_webhook(){
+        $this->validate([
+            'webhook_title' => ['required', 'max:120', 'unique:web_hooks,title']
+        ]);
+        WebHook::create([
+            'title' => $this->webhook_title,
+            'channel_id' => $this->channel->id,
+            'user_id' => Auth::user()->id,
+            'webhook' => Str::uuid().'-'.Str::uuid().'-'.rand(99,999999)
+        ]);
+        $this->reset(['webhook_title']);
+        session()->flash('channel_success', 'Webhook has been created!');
     }
 }

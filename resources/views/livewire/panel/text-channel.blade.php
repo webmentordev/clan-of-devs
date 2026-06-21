@@ -271,11 +271,24 @@
                         <div class="flex mb-2 p-2 group hover:bg-dark-100 transition-all rounded-md" x-data="{ open: false, shiftHeld: false }"  
                             @keydown.shift.window="shiftHeld = true" 
                             @keyup.shift.window="shiftHeld = false">
-                            <img src="{{ $single_message->user->get_avatar() }}" width="40px" height="40px" class="object-fill rounded-full w-10 h-10">
+                            @php
+                                $is_webhook = $single_message->webhook_id ?? false;
+                            @endphp
+                            @if ($is_webhook)
+                                <img src="https://api.iconify.design/pixel:robot-solid.svg?color=%23fcff38" width="40px" height="40px" class="object-center rounded-full w-10 h-10 border border-[#fcff38]">
+                            @else
+                                <img src="{{ $single_message->user->get_avatar() }}" width="40px" height="40px" class="object-fill rounded-full w-10 h-10">
+                            @endif
                             <div class="flex flex-col ml-3 w-full">
                                 <div class="flex justify-between w-full">
                                     <div class="flex items-center">
-                                        <h3 class="text-white text-lg">{{ $single_message->user->name }}</h3>
+                                        <div class="flex items-center">
+                                            <h3 class="text-white text-lg mr-1">{{ $is_webhook ? $single_message->webhook->title : $single_message->user->name }}</h3>
+                                            @if ($is_webhook)
+                                                <img title="Webhook" src="https://api.iconify.design/mdi:robot-happy-outline.svg?color=%23fcff38" width="15px">
+                                            @endif
+                                        </div>
+                                        
                                         <span class="ml-3 text-txt-1 text-sm">{{ $single_message->created_at->format('d M, y h:i A') }}</span>
                                     </div>
                                     <div class="relative hidden group-hover:block">
@@ -313,7 +326,7 @@
     </section>
 
 
-    <nav class="flex flex-col p-6 h-full border-x border-dark-light-100 bg-dark w-110" x-data="{ add: false, webhook: true, channel_setting: false }">
+    <nav class="flex flex-col p-6 h-full border-x border-dark-light-100 bg-dark w-110" x-data="{ add: false, webhook: false, channel_setting: false }">
         <div class="" x-data="{ open: false }">
             <div class="flex flex-col">
                 <div class="flex items-center justify-between mb-3">
@@ -375,6 +388,28 @@
                             <span class="text-txt-2">Channel visibility</span>
                             <x-simple-button type="submit">{{ $channel->is_private ? 'Private' : 'Public' }}</x-simple-button>
                         </form>
+                    </div>
+
+                    <div class="w-full mt-3 border-b border-white/10 pb-3" x-show="webhook" x-cloak x-transition @click.away="webhook = false">
+                        <h3 class="text-white mb-3">Create webhooks</h3>
+                        <x-input class="border-none bg-dark-100 text-white mb-3" wire:model.live="webhook_title" placeholder="Webhook title" />
+                        @error('webhook_title')
+                            <x-error>{{ $message }}</x-error>
+                        @enderror
+                        <x-simple-button class="my-2" wire:click="create_webhook">Create</x-simple-button>
+                        <div class="h-40 overflow-hidden overflow-y-scroll">
+                            @forelse ($channel->webhooks as $wbh)
+                                <div class="flex items-center justify-between mb-1 bg-dark-100 p-2 rounded-lg" 
+                                    x-data="{ wbh: '{{ $wbh->webhook }}', copied: false }">
+                                    <span class="text-white text-[13px]" title="{{ $wbh->title }}">
+                                        {{ Str::limit($wbh->title, 27, '...') }}
+                                    </span>
+                                    <x-simple-button @click=" navigator.clipboard.writeText(wbh); copied = true; setTimeout(() => copied = false, 2000)" x-text="copied ? 'Copied!' : 'Copy'"> Copy </x-simple-button>
+                                </div>
+                            @empty
+                                <p class="text-gray-400">No webhook found</p>
+                            @endforelse
+                        </div>
                     </div>
                 @endcan
                 
