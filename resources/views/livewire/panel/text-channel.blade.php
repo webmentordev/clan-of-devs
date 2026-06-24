@@ -266,7 +266,17 @@
                 </div>
             </div>
             <div class="mt-4 max-h-178 overflow-y-scroll hide-scrollbar">
-                <div class="space-y-2 sm:[overflow-anchor:none]">
+                <div class="space-y-2 sm:[overflow-anchor:none]" x-init="Echo.private('channel.{{ $channel->id }}')
+                        .listen('MessageCreated', (e) => {
+                            if (e.user_id != {{ Auth::user()->id }}) {
+                                document.getElementById('audio').play()
+                            }
+                            if(e.webhook_id){
+                                document.getElementById('audio-webhook').play();
+                            }
+                        });">
+                    <audio id="audio" src="{{ asset('assets/sounds/message-sound.mp3') }}" allow="autoplay" class="hidden"></audio>
+                    <audio id="audio-webhook" src="{{ asset('assets/sounds/pop.mp3') }}" allow="autoplay" class="hidden"></audio>
                     @forelse ($chat_messages as $single_message)
                         <div class="flex mb-2 p-2 group hover:bg-dark-100 transition-all rounded-md" x-data="{ open: false, shiftHeld: false }"  
                             @keydown.shift.window="shiftHeld = true" 
