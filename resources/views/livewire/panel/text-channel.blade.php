@@ -336,7 +336,7 @@
     </section>
 
 
-    <nav class="flex flex-col p-6 h-full border-x border-dark-light-100 bg-dark w-110" x-data="{ add: false, webhook: false, channel_setting: false }">
+    <nav class="flex flex-col p-6 h-full border-x border-dark-light-100 bg-dark w-110" x-data="{ add: false, webhook: true, channel_setting: false }">
         <div class="" x-data="{ open: false }">
             <div class="flex flex-col">
                 <div class="flex items-center justify-between mb-3">
@@ -407,14 +407,23 @@
                             <x-error>{{ $message }}</x-error>
                         @enderror
                         <x-simple-button class="my-2" wire:click="create_webhook">Create</x-simple-button>
-                        <div class="h-40 overflow-hidden overflow-y-scroll">
+                        <div class="h-60 overflow-hidden overflow-y-scroll mt-4">
                             @forelse ($channel->webhooks as $wbh)
-                                <div class="flex items-center justify-between mb-1 bg-dark-100 p-2 rounded-lg" 
-                                    x-data="{ wbh: '{{ $wbh->webhook }}', copied: false }">
-                                    <span class="text-white text-[13px]" title="{{ $wbh->title }}">
-                                        {{ Str::limit($wbh->title, 27, '...') }}
-                                    </span>
-                                    <x-simple-button @click=" navigator.clipboard.writeText(wbh); copied = true; setTimeout(() => copied = false, 2000)" x-text="copied ? 'Copied!' : 'Copy'"> Copy </x-simple-button>
+                                <div class="relative flex items-center justify-between mb-1 bg-dark-100 p-2 rounded-lg" 
+                                    x-data="{ wbh: '{{ $wbh->webhook }}', copied: false, webhook_actions: false }" wire:key="{{ $wbh->id }}">
+                                    @php
+                                        $final_text = Str::limit($wbh->title, 27, '...');
+                                    @endphp
+                                    <button class="text-start text-white" @click=" navigator.clipboard.writeText(wbh); copied = true; setTimeout(() => copied = false, 2000)" x-text="copied ? 'Copied!' : '{{ $final_text }}'"> {{ $final_text }} </button>
+                                    <button @click="webhook_actions = true">
+                                        <img src="https://api.iconify.design/mdi:dots-vertical.svg?color=%23ffffff" width="20px">
+                                    </button>
+                                    <div class="absolute top-3 right-0 bg-white p-2 rounded-lg w-40 z-10" x-show="webhook_actions" x-cloak @click.away="webhook_actions = false">
+                                        <div class="flex flex-col">
+                                            <strong class="mb-1 border-b border-gray-300 pb-1">Action</strong>
+                                            <x-simple-button wire:click='delete_webhook({{ $wbh }})' wire:confirm="Are you sure?">Delete</x-simple-button>
+                                        </div>
+                                    </div>
                                 </div>
                             @empty
                                 <p class="text-gray-400">No webhook found</p>
@@ -440,7 +449,7 @@
                     </div>
                 @endif
             </div>
-            <div wire:loading wire:target="add_user, search_user, channel_type, create_new_channel, channel_visibility, add_new_member, update_profile, new_avatar, add_to_channel">
+            <div wire:loading wire:target="add_user, search_user, channel_type, create_new_channel, channel_visibility, add_new_member, update_profile, new_avatar, add_to_channel, delete_webhook, create_webhook">
                 <x-alert-processing />
             </div>
         </div>

@@ -270,4 +270,10 @@ class TextChannel extends Component
         $this->reset(['webhook_title']);
         session()->flash('channel_success', 'Webhook has been created!');
     }
+
+    public function delete_webhook(WebHook $webhook){
+        $this->authorize('is_admin');
+        $webhook->delete();
+        session()->flash('channel_success', 'Webhook has been deleted!');
+    }
 }
